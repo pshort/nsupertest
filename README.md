@@ -40,6 +40,19 @@ public void SomeTests
 }
 ```
 
+## Testing an external API
+Sometimes you just want to run tests against an external API thats hosted somewhere else. The Service objects provides a non generic constructor that takes a Url as a target to help you do that.
+
+```C#
+  static Server server;
+  
+  [ClassInitialize]
+  public static void Init(TestContext ctx) 
+  {
+    server = new Server("http://api.mysite.com:3002/myapi");
+  }
+```
+
 ## The API
 The api is a fluent API that hangs off the server.verb chain where verb is a standard HTTP verb.
 
