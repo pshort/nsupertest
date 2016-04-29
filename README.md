@@ -39,3 +39,32 @@ public void SomeTests
   }
 }
 ```
+
+## The API
+The api is a fluent API that hangs off the server.verb chain where verb is a standard HTTP verb.
+
+### Get
+Get is pretty straight forward.
+
+```C#
+    server
+      .Get("/products")
+      .Expect(200)
+      .End();
+```
+
+### Post
+Post allows you to post a body to the server
+
+```C#
+    var product = new {
+      Name = "Acme Thing",
+      Price = 100
+    };
+    
+    server
+      .Post("/products")
+      .Send(product)
+      .Expect(201)
+      .End();
+```
