@@ -1,4 +1,4 @@
-# nsupertest [![Build Status](https://travis-ci.org/pshort/nsupertest.svg?branch=master)](https://travis-ci.org/pshort/nsupertest)
+# nsupertest [![Build Status](https://travis-ci.org/pshort/nsupertest.svg?branch=master)](https://travis-ci.org/pshort/nsupertest) [![NuGet](https://img.shields.io/nuget/v/NSuperTest.svg)]
 
 Super Test style testing for .net [OWIN](http://owin.org/) web api projects
 
