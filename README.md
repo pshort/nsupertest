@@ -34,8 +34,8 @@ public void SomeTests
   public void TestHelloWorldRoute()
   {
     server.Get("/hello")
-    .Expect(200)
-    .End();
+      .Expect(200)
+      .End();
   }
 }
 ```
@@ -67,4 +67,62 @@ Post allows you to post a body to the server
       .Send(product)
       .Expect(201)
       .End();
+```
+### Put
+Put allows you to send a body to the server
+
+```C#
+    var product = new {
+      Name = "Acme Better Thing"
+    };
+    
+    server
+      .Put("/products")
+      .Send(product)
+      .Expect(200)
+      .End();
+```
+
+### Delete
+Does what it says on the tin
+
+```C#
+    server
+      .Delete("/products/12")
+      .Expect(204)
+      .End();
+```
+
+### Headers
+Headers can be set on requests using the Set method
+
+```C#
+    server
+      .Get("/products")
+      .Set("Accept", "application/json")
+      .Expect(200)
+      .End();
+```
+There is also a specific method to allow setting a bearer token
+```C#
+    server
+      .Get("/products")
+      .SetBearerToken("cC2340xcv")
+      .Expect(200)
+      .End();
+      
+    // ITestBuilder SetBearerToken(Func<string> generator);
+    // ITestBuilder SetBearerToken(Func<Task<string>> generatorTask);
+```
+The SetBearerToken has 3 overloads allowing you to generate the token then and there or farm it off to a Task that will return the bearer token, allowing you to request it from an authentication server using client credentials if possible.
+
+### End
+When you have completed the chain you use the end method to invoke the request and run the assertions. You can also use one of two overloads that allow you to place some custom assertions on the response using the HttpResponseMessage object returned, or a Generic version of End that tries to cast the body into an object.
+```C#
+    server
+      .Get("/products/12")
+      .Expect(200)
+      .End<Product>((m, p) => {
+        Assert.AreEqual(12, p.Id);
+      });
 ```
