@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>NSuperTest</id>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <authors>Peter Short</authors>
     <owners>Peter Short</owners>
     <licenseUrl>https://github.com/pshort/nsupertest/blob/master/LICENSE</licenseUrl>
