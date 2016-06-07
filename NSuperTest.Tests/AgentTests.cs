@@ -163,5 +163,31 @@ namespace NSuperTestTests
                         && m.Content.Headers.ContentType.MediaType == "application/json"
                     )), Times.Once());
         }
+
+
+        [Test]
+        public void ShouldSetPostMultiPart()
+        {
+            builder.SetMethod(HttpMethod.Post);
+
+            var content = new MultipartFormDataContent();
+            content.Add(new StringContent("Test"), "test");
+
+            builder
+                .Send(content)
+                .End();
+
+            client.Verify(
+                c => c.MakeRequest(It.Is<HttpRequestMessage>(
+                    m => m.Content.Headers.ContentType.MediaType == "multipart/form-data" &&
+                    m.Content == content
+                )), Times.Once());
+        }
+
+        private bool VerifyMessage(HttpRequestMessage message)
+        {
+            return true;
+
+        }
     }
 }

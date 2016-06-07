@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>NSuperTest</id>
+    <version>0.0.2</version>
+    <authors>Peter Short</authors>
+    <owners>Peter Short</owners>
+    <licenseUrl>https://github.com/pshort/nsupertest/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/pshort/nsupertest</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Super Test style testing for .net web api projects</description>
+    <copyright>Copyright 2016</copyright>
+    <dependencies>
+      <group targetFramework=".NETFramework4.0">
+        <dependency id="Microsoft.Owin.Host.HttpListener" version="3.0.1" />
+        <dependency id="Microsoft.Owin.Hosting" version="3.0.1" />
+        <dependency id="System.Net.Http" version="4.0.0" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="NSuperTest/bin/Release/NSuperTest.dll" target="lib/NSuperTest.dll" />
+  </files>
+</package>

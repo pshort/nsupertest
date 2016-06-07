@@ -86,6 +86,12 @@ namespace NSuperTest
         /// <returns>ITestBuilder for chaining</returns>
         ITestBuilder Send(object body);
         /// <summary>
+        /// Sends a multipart form content post to the server
+        /// </summary>
+        /// <param name="content">A multipart form content object</param>
+        /// <returns></returns>
+        ITestBuilder Send(MultipartFormDataContent content);
+        /// <summary>
         /// Set a HTTP header in the outgoing request
         /// </summary>
         /// <param name="header">The header to set</param>

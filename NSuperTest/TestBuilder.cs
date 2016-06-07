@@ -213,6 +213,12 @@ namespace NSuperTest
             return this;
         }
 
+        public ITestBuilder Send(MultipartFormDataContent content)
+        {
+            request.Content = content;
+            return this;
+        }
+
         public ITestBuilder Set(string header, string value)
         {
             request.Headers.Add(header, value);
