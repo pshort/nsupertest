@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin.Hosting;
+﻿using Microsoft.Owin.Host.HttpListener;
+using Microsoft.Owin.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,6 +111,11 @@ namespace NSuperTest
         /// </summary>
         public Server()
         {
+            // this code is ensure the httplistener lib gets onto build servers
+            var listener = typeof(OwinHttpListener);
+            if (listener != null) { }
+            // end of rediculous hacky code to ensure builds come with the owinhttplistener dll
+
             Port = 3105;
             Address = string.Format(UrlFormat, Port);
             Target = WebApp.Start<T>(Address);
