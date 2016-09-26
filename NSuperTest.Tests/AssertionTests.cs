@@ -96,6 +96,16 @@ namespace NSuperTestTests
         }
 
         [Test]
+        public void ShouldAssertRedirect()
+        {
+            message.StatusCode = HttpStatusCode.Redirect;
+
+            builder
+                .ExpectRedirect()
+                .End();
+        }
+
+        [Test]
         public void ShouldThrowAssertStatusCodes()
         {
             Action action = () => builder.Expect(401).End();

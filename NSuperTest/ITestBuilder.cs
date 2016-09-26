@@ -81,6 +81,17 @@ namespace NSuperTest
         void ExpectUnauthorized(Action<HttpResponseMessage> callback);
 
         /// <summary>
+        /// Expect 302 redirect response code
+        /// </summary>
+        /// <returns>ITestBuilder for chaining</returns>
+        ITestBuilder ExpectRedirect();
+        /// <summary>
+        /// Expect 302 redirect response code and end the chain
+        /// </summary>
+        /// <param name="callback">A final callback function to end the chain</param>
+        void ExpectRedirect(Action<HttpResponseMessage> callback);
+
+        /// <summary>
         /// Expect a string body
         /// </summary>
         /// <param name="body">The string body to expect in the response</param>

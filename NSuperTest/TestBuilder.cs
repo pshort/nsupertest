@@ -91,6 +91,7 @@ namespace NSuperTest
             assertions.Add(() => AssertCode(400, response));
             End(callback);
         }
+        
         public ITestBuilder ExpectUnauthorized()
         {
             assertions.Add(() => AssertCode(401, response));
@@ -100,6 +101,18 @@ namespace NSuperTest
         public void ExpectUnauthorized(Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertCode(401, response));
+            End(callback);
+        }
+
+        public ITestBuilder ExpectRedirect()
+        {
+            assertions.Add(() => AssertCode(302, response));
+            return this;
+        }
+
+        public void ExpectRedirect(Action<HttpResponseMessage> callback)
+        {
+            assertions.Add(() => AssertCode(302, response));
             End(callback);
         }
 
