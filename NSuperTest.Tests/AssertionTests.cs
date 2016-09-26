@@ -120,7 +120,7 @@ namespace NSuperTestTests
         {
             Action action = () => builder.Expect(401).End();
             action.ShouldThrow<Exception>()
-                .WithMessage("Expected status code 401 but got 200");
+                .WithMessage("Expected status code Unauthorized (401) but got Ok (200)");
         }
 
         [Test]

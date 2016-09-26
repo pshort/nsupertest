@@ -184,7 +184,6 @@ namespace NSuperTest
         public void End(Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => RunCallback(callback));
-
             End();
         }
 
@@ -205,7 +204,11 @@ namespace NSuperTest
             var code = (int)message.StatusCode;
             if (code != expected)
             {
-                string error = string.Format("Expected status code {0} but got {1}", expected, code);
+                var expectedHttpStatusCode = (HttpStatusCode)expected;
+                var recievedMsg = string.Format("{0} ({1})", message.StatusCode, code);
+                var expectedMsg = string.Format("{0} ({1})", expectedHttpStatusCode, expected);
+
+                string error = string.Format("Expected status code {0} but got {1}", expectedMsg, recievedMsg);
                 throw new Exception(error);
             }
         }
