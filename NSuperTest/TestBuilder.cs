@@ -3,6 +3,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,6 +42,20 @@ namespace NSuperTest
         public void Expect(int code, Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertCode(code, response));
+            End(callback);
+        }
+
+        public ITestBuilder Expect(HttpStatusCode code)
+        {
+            var intCode = (int)code;
+            assertions.Add(() => AssertCode(intCode, response));
+            return this;
+        }
+
+        public void Expect(HttpStatusCode code, Action<HttpResponseMessage> callback)
+        {
+            var intCode = (int)code;
+            assertions.Add(() => AssertCode(intCode, response));
             End(callback);
         }
 

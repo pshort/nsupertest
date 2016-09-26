@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,19 @@ namespace NSuperTest
         /// <param name="code">The code to expect</param>
         /// <param name="callback">A final callback function to end the chain</param>
         void Expect(int code, Action<HttpResponseMessage> callback);
+
+        /// <summary>
+        /// Expect a HTTP response code
+        /// </summary>
+        /// <param name="code">The code to expect</param>
+        /// <returns>ITestBuilder for chaining</returns>
+        ITestBuilder Expect(HttpStatusCode code);
+        /// <summary>
+        /// Expect a HTTP response code and end the chain
+        /// </summary>
+        /// <param name="code">The code to expect</param>
+        /// <param name="callback">A final callback function to end the chain</param>
+        void Expect(HttpStatusCode code, Action<HttpResponseMessage> callback);
 
         /// <summary>
         /// Expect 200 success response code

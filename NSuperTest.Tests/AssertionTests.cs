@@ -48,6 +48,16 @@ namespace NSuperTestTests
         }
 
         [Test]
+        public void ShouldAssertEnumStatusCode()
+        {
+            message.StatusCode = HttpStatusCode.PartialContent;
+
+            builder
+                .Expect(HttpStatusCode.PartialContent)
+                .End();
+        }
+
+        [Test]
         public void ShouldAssertOk()
         {
             builder
