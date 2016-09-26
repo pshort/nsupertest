@@ -14,6 +14,3 @@ configuration: Release
 
 before_build:
   - cmd: nuget restore
-
-build:
-  project: NSuperTest\NSuperTest.csproj
