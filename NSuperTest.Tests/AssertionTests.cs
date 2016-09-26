@@ -76,6 +76,16 @@ namespace NSuperTestTests
         }
 
         [Test]
+        public void ShouldAssertBadRequest()
+        {
+            message.StatusCode = HttpStatusCode.BadRequest;
+
+            builder
+                .ExpectBadRequest()
+                .End();
+        }
+
+        [Test]
         public void ShouldThrowAssertStatusCodes()
         {
             Action action = () => builder.Expect(401).End();

@@ -59,6 +59,17 @@ namespace NSuperTest
         void ExpectNotFound(Action<HttpResponseMessage> callback);
 
         /// <summary>
+        /// Expect 400 bad request response code
+        /// </summary>
+        /// <returns>ITestBuilder for chaining</returns>
+        ITestBuilder ExpectBadRequest();
+        /// <summary>
+        /// Expect 400 bad request response code and end the chain
+        /// </summary>
+        /// <param name="callback">A final callback function to end the chain</param>
+        void ExpectBadRequest(Action<HttpResponseMessage> callback);
+
+        /// <summary>
         /// Expect a string body
         /// </summary>
         /// <param name="body">The string body to expect in the response</param>
