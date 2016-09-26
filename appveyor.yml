@@ -8,7 +8,7 @@ branches:
 #skip_non_tags: true
 
 assembly_info:
-  patch: false
+  patch: true
 
 configuration: Release
 
