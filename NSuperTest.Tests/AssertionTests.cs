@@ -48,6 +48,14 @@ namespace NSuperTestTests
         }
 
         [Test]
+        public void ShouldAssertOk()
+        {
+            builder
+                .ExpectOk()
+                .End();
+        }
+
+        [Test]
         public void ShouldThrowAssertStatusCodes()
         {
             Action action = () => builder.Expect(401).End();

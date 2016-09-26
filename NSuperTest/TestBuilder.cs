@@ -44,6 +44,18 @@ namespace NSuperTest
             End(callback);
         }
 
+        public ITestBuilder ExpectOk()
+        {
+            assertions.Add(() => AssertCode(200, response));
+            return this;
+        }
+
+        public void ExpectOk(Action<HttpResponseMessage> callback)
+        {
+            assertions.Add(() => AssertCode(200, response));
+            End(callback);
+        }
+
         public ITestBuilder Expect(string body)
         {
             assertions.Add(() => AssertBody(body, response));

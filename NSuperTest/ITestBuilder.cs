@@ -26,6 +26,17 @@ namespace NSuperTest
         void Expect(int code, Action<HttpResponseMessage> callback);
 
         /// <summary>
+        /// Expect 200 success response code
+        /// </summary>
+        /// <returns>ITestBuilder for chaining</returns>
+        ITestBuilder ExpectOk();
+        /// <summary>
+        /// Expect 200 success response code and end the chain
+        /// </summary>
+        /// <param name="callback">A final callback function to end the chain</param>
+        void ExpectOk(Action<HttpResponseMessage> callback);
+
+        /// <summary>
         /// Expect a string body
         /// </summary>
         /// <param name="body">The string body to expect in the response</param>
