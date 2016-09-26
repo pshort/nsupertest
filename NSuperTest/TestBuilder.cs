@@ -79,6 +79,7 @@ namespace NSuperTest
             assertions.Add(() => AssertCode(404, response));
             End(callback);
         }
+
         public ITestBuilder ExpectBadRequest()
         {
             assertions.Add(() => AssertCode(400, response));
@@ -88,6 +89,17 @@ namespace NSuperTest
         public void ExpectBadRequest(Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertCode(400, response));
+            End(callback);
+        }
+        public ITestBuilder ExpectUnauthorized()
+        {
+            assertions.Add(() => AssertCode(401, response));
+            return this;
+        }
+
+        public void ExpectUnauthorized(Action<HttpResponseMessage> callback)
+        {
+            assertions.Add(() => AssertCode(401, response));
             End(callback);
         }
 

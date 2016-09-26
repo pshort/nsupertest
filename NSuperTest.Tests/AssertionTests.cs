@@ -86,6 +86,16 @@ namespace NSuperTestTests
         }
 
         [Test]
+        public void ShouldAssertUnauthorized()
+        {
+            message.StatusCode = HttpStatusCode.Unauthorized;
+
+            builder
+                .ExpectUnauthorized()
+                .End();
+        }
+
+        [Test]
         public void ShouldThrowAssertStatusCodes()
         {
             Action action = () => builder.Expect(401).End();

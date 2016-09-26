@@ -70,6 +70,17 @@ namespace NSuperTest
         void ExpectBadRequest(Action<HttpResponseMessage> callback);
 
         /// <summary>
+        /// Expect 401 unauthorized response code
+        /// </summary>
+        /// <returns>ITestBuilder for chaining</returns>
+        ITestBuilder ExpectUnauthorized();
+        /// <summary>
+        /// Expect 401 unauthorized response code and end the chain
+        /// </summary>
+        /// <param name="callback">A final callback function to end the chain</param>
+        void ExpectUnauthorized(Action<HttpResponseMessage> callback);
+
+        /// <summary>
         /// Expect a string body
         /// </summary>
         /// <param name="body">The string body to expect in the response</param>
