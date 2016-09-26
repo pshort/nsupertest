@@ -20,6 +20,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="NSuperTest/bin/Release/NSuperTest.dll" target="lib/NSuperTest.dll" />
+    <file src="bin/Release/NSuperTest.dll" target="lib/NSuperTest.dll" />
   </files>
 </package>
