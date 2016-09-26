@@ -66,6 +66,16 @@ namespace NSuperTestTests
         }
 
         [Test]
+        public void ShouldAssertNotFound()
+        {
+            message.StatusCode = HttpStatusCode.NotFound;
+
+            builder
+                .ExpectNotFound()
+                .End();
+        }
+
+        [Test]
         public void ShouldThrowAssertStatusCodes()
         {
             Action action = () => builder.Expect(401).End();

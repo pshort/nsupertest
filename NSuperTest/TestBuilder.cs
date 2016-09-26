@@ -68,6 +68,18 @@ namespace NSuperTest
             End(callback);
         }
 
+        public ITestBuilder ExpectNotFound()
+        {
+            assertions.Add(() => AssertCode(404, response));
+            return this;
+        }
+
+        public void ExpectNotFound(Action<HttpResponseMessage> callback)
+        {
+            assertions.Add(() => AssertCode(404, response));
+            End(callback);
+        }
+
         public ITestBuilder Expect(string body)
         {
             assertions.Add(() => AssertBody(body, response));
