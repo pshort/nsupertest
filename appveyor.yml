@@ -14,9 +14,3 @@ configuration: Release
 
 before_build:
   - cmd: nuget restore
-
-build:
-  project: NSuperTest.sln
-  publish_nuget: true
-  include_nuget_references: true
-  verbosity: minimal
