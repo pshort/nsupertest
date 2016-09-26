@@ -33,7 +33,7 @@ namespace NSuperTestTests
             user = new User { Name = "Peter", Age = 32, Id = 1 };
 
             clientMock = new Mock<IHttpRequestClient>();
-            clientMock.Setup(c => c.MakeRequest(It.IsAny<HttpRequestMessage>())).Returns(message);
+            clientMock.Setup(c => c.MakeRequest(It.IsAny<HttpRequestMessage>())).Returns(() => message);
 
             builder = new TestBuilder("/test", clientMock.Object);
             builder.SetMethod(HttpMethod.Get);
@@ -52,6 +52,16 @@ namespace NSuperTestTests
         {
             builder
                 .ExpectOk()
+                .End();
+        }
+
+        [Test]
+        public void ShouldAssertCreated()
+        {
+            message.StatusCode = HttpStatusCode.Created;
+
+            builder
+                .ExpectCreated()
                 .End();
         }
 

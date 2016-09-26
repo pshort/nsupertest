@@ -56,6 +56,18 @@ namespace NSuperTest
             End(callback);
         }
 
+        public ITestBuilder ExpectCreated()
+        {
+            assertions.Add(() => AssertCode(201, response));
+            return this;
+        }
+
+        public void ExpectCreated(Action<HttpResponseMessage> callback)
+        {
+            assertions.Add(() => AssertCode(201, response));
+            End(callback);
+        }
+
         public ITestBuilder Expect(string body)
         {
             assertions.Add(() => AssertBody(body, response));
