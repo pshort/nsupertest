@@ -23,5 +23,29 @@ namespace NSuperTest.Tests.Servers
             testBuilder.Should().NotBeNull();
             testBuilder.Should().BeOfType<TestBuilder>();
         }
+
+        [Test]
+        public void ShouldCreateWithAStartupClass()
+        {
+            var server = new Server<Startup>();
+
+            server.Should().NotBeNull();
+            var testBuilder = server.Get("/");
+
+            testBuilder.Should().NotBeNull();
+            testBuilder.Should().BeOfType<TestBuilder>();
+        }
+
+        [Test]
+        public void ShouldCreateFromConfig()
+        {
+            var server = new Server();
+
+            server.Should().NotBeNull();
+            var testBuilder = server.Get("/");
+
+            testBuilder.Should().NotBeNull();
+            testBuilder.Should().BeOfType<TestBuilder>();
+        }
     }
 }
