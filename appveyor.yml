@@ -5,7 +5,7 @@ branches:
   only:
     - master
 
-#skip_non_tags: true
+skip_non_tags: true
 
 assembly_info:
   patch: true
