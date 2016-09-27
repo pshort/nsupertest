@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NSuperTestTests
+namespace NSuperTestTests.Models
 {
-    public class User
+    public class Class
     {
         public string Name { get; set; }
-        public int Age { get; set; }
-        public int Id { get; set; }
     }
 }

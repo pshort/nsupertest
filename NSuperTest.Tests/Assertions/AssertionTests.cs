@@ -10,8 +10,9 @@ using FluentAssertions;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using NSuperTestTests.Models;
 
-namespace NSuperTestTests
+namespace NSuperTestTests.Assertions
 {
     [TestFixture]
     public class AssertionTests
