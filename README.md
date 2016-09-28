@@ -1,4 +1,4 @@
-# nsupertest [![Build Status](https://travis-ci.org/pshort/nsupertest.svg?branch=master)](https://travis-ci.org/pshort/nsupertest) [![NuGet](https://img.shields.io/nuget/v/NSuperTest.svg)](https://www.nuget.org/packages/NSuperTest) [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://en.wikipedia.org/wiki/MIT_License)
+# nsupertest [![NuGet](https://img.shields.io/nuget/v/NSuperTest.svg)](https://www.nuget.org/packages/NSuperTest) [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://en.wikipedia.org/wiki/MIT_License)
 
 Super Test style testing for .net [OWIN](http://owin.org/) web api projects
 
@@ -38,6 +38,27 @@ public void SomeTests
       .End();
   }
 }
+```
+
+## In memory with config
+You can also in memory test using a configuration setting. To use this, specify an app setting called nsupertest:appStartup and specify the fully qualified type name for your startup class.
+
+```XML
+  <appSettings>
+    <add key="nsupertest:appStartup" value="MyLib.StartupMock, MyLib" />
+  </appSettings
+```
+
+Once this is done you can just create a new server instance and you dont need to supply an standard or generic parameters
+
+```C#
+  static Server server;
+  
+  [ClassInitialize]
+  public static void Init(TestContext ctx)
+  {
+    server = new Server();
+  }
 ```
 
 ## Testing an external API
@@ -128,6 +149,20 @@ There is also a specific method to allow setting a bearer token
     // ITestBuilder SetBearerToken(Func<Task<string>> generatorTask);
 ```
 The SetBearerToken has 3 overloads allowing you to generate the token then and there or farm it off to a Task that will return the bearer token, allowing you to request it from an authentication server using client credentials if possible.
+
+## Response Status
+
+There are 3 ways to assert response status, either via int code, HttpStatusCode enum or via some convenience methods that have been added. 
+
+```C#
+
+.Expect(200);               // Expect ok
+
+.Expect(HttpStatusCode.Ok); // Expect ok
+
+.ExpectOk();                // Expect ok
+
+```
 
 ### End
 When you have completed the chain you use the end method to invoke the request and run the assertions. You can also use one of two overloads that allow you to place some custom assertions on the response using the HttpResponseMessage object returned, or a Generic version of End that tries to cast the body into an object.
