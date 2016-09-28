@@ -1,4 +1,4 @@
-# nsupertest [![Build status](https://ci.appveyor.com/api/projects/status/a1htkm0xyg2wih6c?svg=true)](https://ci.appveyor.com/project/pshort/nsupertest) [![NuGet](https://img.shields.io/nuget/v/NSuperTest.svg)](https://www.nuget.org/packages/NSuperTest) [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://en.wikipedia.org/wiki/MIT_License)
+# nsupertest [![Build status](https://ci.appveyor.com/api/projects/status/a1htkm0xyg2wih6c?svg=true)](https://ci.appveyor.com/project/pshort/nsupertest) [![NuGet](https://img.shields.io/badge/Nuget-0.1.18-green.svg)](https://www.nuget.org/packages/NSuperTest) [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://en.wikipedia.org/wiki/MIT_License)
 
 Super Test style testing for .net [OWIN](http://owin.org/) web api projects
 
