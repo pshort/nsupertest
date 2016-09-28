@@ -1,4 +1,4 @@
-# nsupertest [![NuGet](https://img.shields.io/nuget/v/NSuperTest.0.1.18.svg)](https://www.nuget.org/packages/NSuperTest/0.1.18) [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://en.wikipedia.org/wiki/MIT_License)
+# nsupertest [![NuGet](https://img.shields.io/nuget/0.1.18/NSuperTest.svg)](https://www.nuget.org/packages/NSuperTest/0.1.18) [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://en.wikipedia.org/wiki/MIT_License)
 
 Super Test style testing for .net [OWIN](http://owin.org/) web api projects
 
