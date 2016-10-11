@@ -27,7 +27,7 @@ public void SomeTests
   [ClassInitialize]
   public static void Init(TestContext ctx) 
   {
-    server = new Server();
+    server = new Server<Startup>();
   }
   
   [TestMethod]
