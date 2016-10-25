@@ -3,6 +3,7 @@ using Microsoft.Owin.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -98,42 +99,11 @@ namespace NSuperTest
 
             Address = string.Format(UrlFormat, Port);
 
-            // if its the generic type then let logic happen in its contructor
-            if (this.GetType().IsGenericType)
-            {
-                return;
-            }
-
-            var appStartup = ConfigurationManager.AppSettings["nsupertest:appStartup"];
-
-            if (string.IsNullOrEmpty(appStartup))
-            {
-                throw new ApplicationException("Please provide a server start class using the nsupertest:appStartup app setting");
-            }
-
-            Type type;
-
             try
             {
-                type = Type.GetType(appStartup, true, false);
+                Target = StartServer();
             }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Unable to load the type specified in nsupertest:appStartup", ex);
-            }
-
-            // hoo boy, reflection. dont....judge....me.......please
-            var webApp = typeof(WebApp);
-            var methods = webApp.GetMethods(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
-            // seriously, im....so....sorry
-            var method = methods[2];
-            var generic = method.MakeGenericMethod(type);
-
-            try
-            {
-                Target = generic.Invoke(null, new[] { Address }) as IDisposable;
-            }
-            catch(HttpListenerException ex)
+            catch (HttpListenerException ex)
             {
                 if (PortFromConfig)
                     throw new ApplicationException(string.Format("The port {0} specified in nsupertest:port is unavailable", Port), ex);
@@ -141,7 +111,32 @@ namespace NSuperTest
                 // we clashed ports
                 Port = GetRandomPort();
                 Address = string.Format(UrlFormat, Port);
-                Target = generic.Invoke(null, new[] { Address }) as IDisposable;
+                Target = StartServer();
+            }
+        }
+
+        protected virtual IDisposable StartServer()
+        {
+            var appStartup = ConfigurationManager.AppSettings["nsupertest:appStartup"];
+
+            if (string.IsNullOrEmpty(appStartup))
+            {
+                throw new ApplicationException("Please provide a server start class using the nsupertest:appStartup app setting");
+            }
+            
+            try
+            {
+                var type = Type.GetType(appStartup, true, false);
+                var options = new StartOptions
+                {
+                    AppStartup = type.FullName,
+                    Port = Port
+                };
+                return WebApp.Start(options);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Unable to load the type specified in nsupertest:appStartup", ex);
             }
         }
 
@@ -213,23 +208,18 @@ namespace NSuperTest
         /// Create a new server
         /// </summary>
         public Server()
-        {
-            try
-            {
-                Target = WebApp.Start<T>(Address);
-            }
-            catch (HttpListenerException ex)
-            {
-                if (PortFromConfig)
-                    throw new ApplicationException(string.Format("The port {0} specified in nsupertest:port is unavailable", Port), ex);
-
-                // we clashed ports
-                Port = GetRandomPort();
-                Address = string.Format(UrlFormat, Port);
-                Target = WebApp.Start<T>(Address);
-            }
-            
+            : base()
+        {            
             UseCamelCase = false;
+        }
+
+        /// <summary>
+        /// Starts the in-memory server
+        /// </summary>
+        /// <returns>The server</returns>
+        protected override IDisposable StartServer()
+        { 
+            return WebApp.Start<T>(Address);
         }
 
         /// <summary>
