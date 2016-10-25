@@ -62,7 +62,7 @@ namespace NSuperTest
         public Server(string address)
         {
             Address = address;
-            UseCamelCase = true;
+            //UseCamelCase = true;
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace NSuperTest
         /// </summary>
         public Server()
         {
-            UseCamelCase = true;
+            //UseCamelCase = true;
             // this code is ensure the httplistener lib gets onto build servers
             var listener = typeof(OwinHttpListener);
             if (listener != null) { }
@@ -210,7 +210,7 @@ namespace NSuperTest
         public Server()
             : base()
         {            
-            UseCamelCase = false;
+            //UseCamelCase = false;
         }
 
         /// <summary>
