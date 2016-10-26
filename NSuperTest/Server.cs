@@ -33,10 +33,7 @@ namespace NSuperTest
         /// holds the reference to the in memory server
         /// that is running the api under test 
         /// </summary>
-        protected IDisposable Target
-        {
-            set; get;
-        }
+        protected IDisposable Target { set; get; }
 
         /// <summary>
         /// If set to true the naming on the Json formatter of the hosted server is expected to use camel case formatting, instead of pascal case.
@@ -46,11 +43,7 @@ namespace NSuperTest
         /// <summary>
         /// The base address of the hosted endpoint
         /// </summary>
-        protected string Address
-        {
-            get;
-            set;
-        }
+        protected string Address { set; get; }
 
         /// <summary>
         /// Create a server for testing pointing it to a hosted address
