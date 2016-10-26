@@ -12,6 +12,8 @@ namespace NSuperTest
     /// </summary>
     public class Server : IDisposable
     {
+        private bool disposing;
+
         /// <summary>
         /// Format string for the url to the server
         /// </summary>
@@ -31,10 +33,7 @@ namespace NSuperTest
         /// holds the reference to the in memory server
         /// that is running the api under test 
         /// </summary>
-        protected IDisposable Target
-        {
-            set; get;
-        }
+        protected IDisposable Target { set; get; }
 
         /// <summary>
         /// If set to true the naming on the Json formatter of the hosted server is expected to use camel case formatting, instead of pascal case.
@@ -44,11 +43,7 @@ namespace NSuperTest
         /// <summary>
         /// The base address of the hosted endpoint
         /// </summary>
-        protected string Address
-        {
-            get;
-            set;
-        }
+        protected string Address { set; get; }
 
         /// <summary>
         /// Create a server for testing pointing it to a hosted address
@@ -57,7 +52,6 @@ namespace NSuperTest
         public Server(string address)
         {
             Address = address;
-            //UseCamelCase = true;
         }
 
         /// <summary>
@@ -65,11 +59,10 @@ namespace NSuperTest
         /// </summary>
         public Server()
         {
-            //UseCamelCase = true;
             // this code is ensure the httplistener lib gets onto build servers
             var listener = typeof(OwinHttpListener);
             if (listener != null) { }
-            // end of rediculous hacky code to ensure builds come with the owinhttplistener dll
+            // end of ridiculous hacky code to ensure builds come with the owinhttplistener dll
 
             // set up a port
             var port = ConfigurationManager.AppSettings["nsupertest:Port"];
@@ -110,6 +103,10 @@ namespace NSuperTest
             }
         }
 
+        /// <summary>
+        /// Starts the in-memory server
+        /// </summary>
+        /// <returns>The server</returns>
         protected virtual IDisposable StartServer()
         {
             var appStartup = ConfigurationManager.AppSettings["nsupertest:appStartup"];
@@ -148,47 +145,64 @@ namespace NSuperTest
         /// <summary>
         /// Make a Get HTTP request to the server
         /// </summary>
-        /// <param name="url">The url to Get starting with /</param>
+        /// <param name="url">The url to Get. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
         public ITestBuilder Get(string url)
         {
-            return GetBuilder(HttpMethod.Get, url);
+            return Request(HttpMethod.Get, url);
         }
 
         /// <summary>
         /// Make a Post HTTP request to the server
         /// </summary>
-        /// <param name="url">The url to Post to starting with /</param>
+        /// <param name="url">The url to Post to. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
         public ITestBuilder Post(string url)
         {
-            return GetBuilder(HttpMethod.Post, url);
+            return Request(HttpMethod.Post, url);
         }
 
         /// <summary>
         /// Make a Put HTTP request to the server
         /// </summary>
-        /// <param name="url">The url to Put to starting with /</param>
+        /// <param name="url">The url to Put to. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
         public ITestBuilder Put(string url)
         {
-            return GetBuilder(HttpMethod.Put, url);
+            return Request(HttpMethod.Put, url);
+        }
+
+        /// <summary>
+        /// Make a Patch HTTP request to the server
+        /// </summary>
+        /// <param name="url">The url to Patch to. Must start with /.</param>
+        /// <returns>ITestBuilder to chain assertions</returns>
+        public ITestBuilder Patch(string url)
+        {
+            var patch = new HttpMethod("PATCH");
+            return Request(patch, url);
         }
 
         /// <summary>
         /// Make a Delete HTTP request to the server
         /// </summary>
-        /// <param name="url">The url to send Delete to starting with /</param>
+        /// <param name="url">The url to send Delete to. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
         public ITestBuilder Delete(string url)
         {
-            return GetBuilder(HttpMethod.Delete, url);
+            return Request(HttpMethod.Delete, url);
         }
 
-        private ITestBuilder GetBuilder(HttpMethod method, string url)
+        /// <summary>
+        /// Make an HTTP request to the server
+        /// </summary>
+        /// <param name="method">The HTTP method to use</param>
+        /// <param name="url">The url to send the request to. Must start with /.</param>
+        /// <returns>ITestBuilder to chain assertions</returns>
+        public ITestBuilder Request(HttpMethod method, string url)
         {
             var client = new HttpRequestClient(Address);
-            var builder = new TestBuilder(url, client, UseCamelCase);
+            var builder = TestBuilderFactory.Create(url, client, useCamelCase: UseCamelCase);
             builder.SetMethod(method);
             return builder;
         }
@@ -198,9 +212,9 @@ namespace NSuperTest
         /// </summary>
         public void Dispose()
         {
-            if(!_disposing)
+            if(!disposing)
             {
-                _disposing = true;
+                disposing = true;
 
                 if (Target != null)
                 {
@@ -208,7 +222,7 @@ namespace NSuperTest
                     Target = null;
                 }
 
-                _disposing = false;
+                disposing = false;
             }
         }
 
@@ -219,8 +233,6 @@ namespace NSuperTest
         {
             this.Dispose();
         }
-
-        private bool _disposing;
     }
     /// <summary>
     /// An object to create an in memery api server for testing Apis.
@@ -234,7 +246,6 @@ namespace NSuperTest
         public Server()
             : base()
         {
-            //UseCamelCase = false;
         }
 
         /// <summary>

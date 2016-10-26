@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace NSuperTest
 {
-    public class TestBuilder : ITestBuilder
+    internal class TestBuilder : ITestBuilder
     {
         private IHttpRequestClient client;
         private HttpRequestMessage request;

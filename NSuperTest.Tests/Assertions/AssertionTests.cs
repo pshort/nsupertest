@@ -18,7 +18,7 @@ namespace NSuperTestTests.Assertions
     public class AssertionTests
     {
         HttpResponseMessage message;
-        TestBuilder builder;
+        ITestBuilder builder;
         Mock<IHttpRequestClient> clientMock;
 
         User user;
@@ -36,7 +36,7 @@ namespace NSuperTestTests.Assertions
             clientMock = new Mock<IHttpRequestClient>();
             clientMock.Setup(c => c.MakeRequest(It.IsAny<HttpRequestMessage>())).Returns(() => message);
 
-            builder = new TestBuilder("/test", clientMock.Object);
+            builder = TestBuilderFactory.Create("/test", clientMock.Object);
             builder.SetMethod(HttpMethod.Get);
         }
 
