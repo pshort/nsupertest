@@ -25,7 +25,7 @@ namespace NSuperTestTests.Agent
             client.Setup(c => c.MakeRequest(It.IsAny<HttpRequestMessage>()))
                 .Callback<HttpRequestMessage>(r => message = r);
 
-            builder = new TestBuilder("/test", client.Object);
+            builder = TestBuilderFactory.Create("/test", client.Object);
         }
 
         [Test]

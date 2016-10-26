@@ -202,7 +202,7 @@ namespace NSuperTest
         public ITestBuilder Request(HttpMethod method, string url)
         {
             var client = new HttpRequestClient(Address);
-            var builder = new TestBuilder(url, client, UseCamelCase);
+            var builder = TestBuilderFactory.Create(url, client, useCamelCase: UseCamelCase);
             builder.SetMethod(method);
             return builder;
         }

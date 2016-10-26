@@ -97,6 +97,7 @@
     <Compile Include="ITestBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.cs" />
+    <Compile Include="TestBuilderFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
