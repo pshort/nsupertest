@@ -105,6 +105,10 @@ namespace NSuperTest
             }
         }
 
+        /// <summary>
+        /// Starts the in-memory server
+        /// </summary>
+        /// <returns>The server</returns>
         protected virtual IDisposable StartServer()
         {
             var appStartup = ConfigurationManager.AppSettings["nsupertest:appStartup"];
