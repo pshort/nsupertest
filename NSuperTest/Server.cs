@@ -69,7 +69,7 @@ namespace NSuperTest
             // this code is ensure the httplistener lib gets onto build servers
             var listener = typeof(OwinHttpListener);
             if (listener != null) { }
-            // end of rediculous hacky code to ensure builds come with the owinhttplistener dll
+            // end of ridiculous hacky code to ensure builds come with the owinhttplistener dll
 
             // set up a port
             var port = ConfigurationManager.AppSettings["nsupertest:Port"];
