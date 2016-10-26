@@ -3,7 +3,7 @@ using System.Net.Http;
 
 namespace NSuperTest
 {
-    public class HttpRequestClient : IHttpRequestClient
+    internal class HttpRequestClient : IHttpRequestClient
     {
         private HttpClient client;
         public HttpRequestClient(string baseUri)
