@@ -148,44 +148,61 @@ namespace NSuperTest
         /// <summary>
         /// Make a Get HTTP request to the server
         /// </summary>
-        /// <param name="url">The url to Get starting with /</param>
+        /// <param name="url">The url to Get. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
         public ITestBuilder Get(string url)
         {
-            return GetBuilder(HttpMethod.Get, url);
+            return Request(HttpMethod.Get, url);
         }
 
         /// <summary>
         /// Make a Post HTTP request to the server
         /// </summary>
-        /// <param name="url">The url to Post to starting with /</param>
+        /// <param name="url">The url to Post to. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
         public ITestBuilder Post(string url)
         {
-            return GetBuilder(HttpMethod.Post, url);
+            return Request(HttpMethod.Post, url);
         }
 
         /// <summary>
         /// Make a Put HTTP request to the server
         /// </summary>
-        /// <param name="url">The url to Put to starting with /</param>
+        /// <param name="url">The url to Put to. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
         public ITestBuilder Put(string url)
         {
-            return GetBuilder(HttpMethod.Put, url);
+            return Request(HttpMethod.Put, url);
+        }
+
+        /// <summary>
+        /// Make a Patch HTTP request to the server
+        /// </summary>
+        /// <param name="url">The url to Patch to. Must start with /.</param>
+        /// <returns>ITestBuilder to chain assertions</returns>
+        public ITestBuilder Patch(string url)
+        {
+            var patch = new HttpMethod("PATCH");
+            return Request(patch, url);
         }
 
         /// <summary>
         /// Make a Delete HTTP request to the server
         /// </summary>
-        /// <param name="url">The url to send Delete to starting with /</param>
+        /// <param name="url">The url to send Delete to. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
         public ITestBuilder Delete(string url)
         {
-            return GetBuilder(HttpMethod.Delete, url);
+            return Request(HttpMethod.Delete, url);
         }
 
-        private ITestBuilder GetBuilder(HttpMethod method, string url)
+        /// <summary>
+        /// Make an HTTP request to the server
+        /// </summary>
+        /// <param name="method">The HTTP method to use</param>
+        /// <param name="url">The url to send the request to. Must start with /.</param>
+        /// <returns>ITestBuilder to chain assertions</returns>
+        public ITestBuilder Request(HttpMethod method, string url)
         {
             var client = new HttpRequestClient(Address);
             var builder = new TestBuilder(url, client, UseCamelCase);
