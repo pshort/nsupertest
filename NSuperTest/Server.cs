@@ -12,6 +12,8 @@ namespace NSuperTest
     /// </summary>
     public class Server : IDisposable
     {
+        private bool disposing;
+
         /// <summary>
         /// Format string for the url to the server
         /// </summary>
@@ -215,9 +217,9 @@ namespace NSuperTest
         /// </summary>
         public void Dispose()
         {
-            if(!_disposing)
+            if(!disposing)
             {
-                _disposing = true;
+                disposing = true;
 
                 if (Target != null)
                 {
@@ -225,7 +227,7 @@ namespace NSuperTest
                     Target = null;
                 }
 
-                _disposing = false;
+                disposing = false;
             }
         }
 
@@ -236,8 +238,6 @@ namespace NSuperTest
         {
             this.Dispose();
         }
-
-        private bool _disposing;
     }
     /// <summary>
     /// An object to create an in memery api server for testing Apis.
