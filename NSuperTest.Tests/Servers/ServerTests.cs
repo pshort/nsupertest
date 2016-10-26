@@ -21,7 +21,7 @@ namespace NSuperTest.Tests.Servers
             var testBuilder = server.Get("/");
 
             testBuilder.Should().NotBeNull();
-            testBuilder.Should().BeOfType<ITestBuilder>();
+            testBuilder.Should().BeAssignableTo<ITestBuilder>();
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace NSuperTest.Tests.Servers
             var testBuilder = server.Get("/");
 
             testBuilder.Should().NotBeNull();
-            testBuilder.Should().BeOfType<ITestBuilder>();
+            testBuilder.Should().BeAssignableTo<ITestBuilder>();
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace NSuperTest.Tests.Servers
             var testBuilder = server.Get("/");
 
             testBuilder.Should().NotBeNull();
-            testBuilder.Should().BeOfType<ITestBuilder>();
+            testBuilder.Should().BeAssignableTo<ITestBuilder>();
         }
     }
 }
