@@ -10,7 +10,7 @@ namespace NSuperTest
     /// <summary>
     /// Allows you to test a server hosting an API. 
     /// </summary>
-    public class Server
+    public class Server : IDisposable
     {
         /// <summary>
         /// Format string for the url to the server
@@ -118,7 +118,7 @@ namespace NSuperTest
             {
                 throw new ApplicationException("Please provide a server start class using the nsupertest:appStartup app setting");
             }
-            
+
             try
             {
                 var type = Type.GetType(appStartup, true, false);
@@ -192,6 +192,35 @@ namespace NSuperTest
             builder.SetMethod(method);
             return builder;
         }
+
+        /// <summary>
+        /// Clean up in memory resource and tear down any servers..
+        /// </summary>
+        public void Dispose()
+        {
+            if(!_disposing)
+            {
+                _disposing = true;
+
+                if (Target != null)
+                {
+                    Target.Dispose();
+                    Target = null;
+                }
+
+                _disposing = false;
+            }
+        }
+
+        /// <summary>
+        /// Clean up allocated resources
+        /// </summary>
+        ~Server()
+        {
+            this.Dispose();
+        }
+
+        private bool _disposing;
     }
     /// <summary>
     /// An object to create an in memery api server for testing Apis.
@@ -204,7 +233,7 @@ namespace NSuperTest
         /// </summary>
         public Server()
             : base()
-        {            
+        {
             //UseCamelCase = false;
         }
 
@@ -213,20 +242,8 @@ namespace NSuperTest
         /// </summary>
         /// <returns>The server</returns>
         protected override IDisposable StartServer()
-        { 
-            return WebApp.Start<T>(Address);
-        }
-
-        /// <summary>
-        /// Clean up in memory resource and tear down any servers..
-        /// </summary>
-        ~Server()
         {
-            if(Target != null)
-            {
-                Target.Dispose();
-                Target = null;
-            }
+            return WebApp.Start<T>(Address);
         }
     }
 }
