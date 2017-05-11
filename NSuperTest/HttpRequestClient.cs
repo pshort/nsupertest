@@ -5,10 +5,12 @@ namespace NSuperTest
 {
     internal class HttpRequestClient : IHttpRequestClient
     {
+        private HttpClientHandler handler;
         private HttpClient client;
         public HttpRequestClient(string baseUri)
         {
-            client = new HttpClient();
+            handler = new HttpClientHandler {UseCookies = false};
+            client = new HttpClient(handler);
             client.BaseAddress = new Uri(baseUri);
         }
 
