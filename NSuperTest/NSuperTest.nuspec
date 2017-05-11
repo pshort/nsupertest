@@ -12,14 +12,19 @@
     <description>Super Test style testing for .net web api projects</description>
     <copyright>Copyright 2016</copyright>
     <dependencies>
-      <group targetFramework=".NETFramework4.0">
+      <group targetFramework="net451">
+        <dependency id="Microsoft.Owin" version="3.0.1" />
         <dependency id="Microsoft.Owin.Host.HttpListener" version="3.0.1" />
         <dependency id="Microsoft.Owin.Hosting" version="3.0.1" />
-        <dependency id="System.Net.Http" version="4.0.0" />
+        <dependency id="Newtonsoft.Json" version="6.0.8" />
+        <dependency id="Owin" version="1.0" />
       </group>
     </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Net.Http" targetFramework="net451" />
+    </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="bin/Release/NSuperTest.dll" target="lib/NSuperTest.dll" />
+    <file src="bin/Release/NSuperTest.dll" target="lib/net451/NSuperTest.dll" />
   </files>
 </package>
