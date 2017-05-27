@@ -1,9 +1,9 @@
-﻿using Microsoft.Owin.Host.HttpListener;
-using Microsoft.Owin.Hosting;
-using System;
-using System.Configuration;
+﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace NSuperTest
 {
@@ -59,22 +59,18 @@ namespace NSuperTest
         /// </summary>
         public Server()
         {
-            // this code is ensure the httplistener lib gets onto build servers
-            var listener = typeof(OwinHttpListener);
-            if (listener != null) { }
-            // end of ridiculous hacky code to ensure builds come with the owinhttplistener dll
-
+            var config = new ConfigurationBuilder().AddJsonFile("nsupertest.json", true).Build();   
             // set up a port
-            var port = ConfigurationManager.AppSettings["nsupertest:Port"];
+            var port = config["nsupertest:port"];
 
             if (!string.IsNullOrEmpty(port))
             {
                 int portInt = 0;
                 if (!int.TryParse(port, out portInt))
-                    throw new ApplicationException("Please provide a valid port in nsupertest:port app setting");
+                    throw new Exception("Please provide a valid port in nsupertest:port app setting");
 
                 if (portInt < 1024)
-                    throw new ApplicationException("Please avoid assigning to ports in the well known range");
+                    throw new Exception("Please avoid assigning to ports in the well known range");
 
                 PortFromConfig = true;
                 Port = portInt;
@@ -87,48 +83,51 @@ namespace NSuperTest
 
             Address = string.Format(UrlFormat, Port);
 
-            try
-            {
-                Target = StartServer();
-            }
-            catch (HttpListenerException ex)
-            {
-                if (PortFromConfig)
-                    throw new ApplicationException(string.Format("The port {0} specified in nsupertest:port is unavailable", Port), ex);
+            // try
+            // {
+                StartServer(config);
+            // }
+            // catch (HttpListenerException ex)
+            // {
+            //     if (PortFromConfig)
+            //         throw new Exception(string.Format("The port {0} specified in nsupertest:port is unavailable", Port), ex);
 
-                // we clashed ports
-                Port = GetRandomPort();
-                Address = string.Format(UrlFormat, Port);
-                Target = StartServer();
-            }
+            //     // we clashed ports
+            //     Port = GetRandomPort();
+            //     Address = string.Format(UrlFormat, Port);
+            //     Target = StartServer(config);
+            // }
         }
 
         /// <summary>
         /// Starts the in-memory server
         /// </summary>
         /// <returns>The server</returns>
-        protected virtual IDisposable StartServer()
+        protected virtual IDisposable StartServer(IConfigurationRoot config)
         {
-            var appStartup = ConfigurationManager.AppSettings["nsupertest:appStartup"];
+            // Todo: change to new configuration system
+            var appStartup = config["nsupertest:appstartup"];
 
             if (string.IsNullOrEmpty(appStartup))
             {
-                throw new ApplicationException("Please provide a server start class using the nsupertest:appStartup app setting");
+                throw new Exception("Please provide a server start class using the nsupertest:appStartup app setting");
             }
 
             try
             {
-                var type = Type.GetType(appStartup, true, false);
-                var options = new StartOptions
-                {
-                    AppStartup = type.FullName,
-                    Port = Port
-                };
-                return WebApp.Start(options);
+                //return WebApp.Start(options);
+                var host = new WebHostBuilder()
+                            .UseKestrel()
+                            .UseUrls(new string[] {Address})
+                            .UseStartup(appStartup)
+                            .Build();
+
+                host.Start();
+                return host;
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Unable to load the type specified in nsupertest:appStartup", ex);
+                throw new Exception("Unable to load the type specified in nsupertest:appStartup", ex);
             }
         }
 
@@ -252,9 +251,16 @@ namespace NSuperTest
         /// Starts the in-memory server
         /// </summary>
         /// <returns>The server</returns>
-        protected override IDisposable StartServer()
+        protected override IDisposable StartServer(IConfigurationRoot config)
         {
-            return WebApp.Start<T>(Address);
+            var host = new WebHostBuilder()
+                        .UseKestrel()
+                        .UseUrls(new string[] { Address })
+                        .UseStartup<T>()
+                        .Build();
+            host.Start();
+
+            return host;
         }
     }
 }

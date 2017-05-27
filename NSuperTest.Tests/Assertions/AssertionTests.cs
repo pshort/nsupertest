@@ -9,12 +9,11 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Newtonsoft.Json;
-using NUnit.Framework;
 using NSuperTestTests.Models;
+using Xunit;
 
 namespace NSuperTestTests.Assertions
 {
-    [TestFixture]
     public class AssertionTests
     {
         HttpResponseMessage message;
@@ -23,8 +22,7 @@ namespace NSuperTestTests.Assertions
 
         User user;
 
-        [SetUp]
-        public void Init()
+        public AssertionTests()
         {
             message = new HttpResponseMessage();
             message.StatusCode = HttpStatusCode.OK;
@@ -40,7 +38,7 @@ namespace NSuperTestTests.Assertions
             builder.SetMethod(HttpMethod.Get);
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertStatusCodes()
         {
             builder
@@ -48,7 +46,7 @@ namespace NSuperTestTests.Assertions
                 .End();
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertEnumStatusCode()
         {
             message.StatusCode = HttpStatusCode.PartialContent;
@@ -58,7 +56,7 @@ namespace NSuperTestTests.Assertions
                 .End();
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertOk()
         {
             builder
@@ -66,7 +64,7 @@ namespace NSuperTestTests.Assertions
                 .End();
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertCreated()
         {
             message.StatusCode = HttpStatusCode.Created;
@@ -76,7 +74,7 @@ namespace NSuperTestTests.Assertions
                 .End();
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertNotFound()
         {
             message.StatusCode = HttpStatusCode.NotFound;
@@ -86,7 +84,7 @@ namespace NSuperTestTests.Assertions
                 .End();
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertBadRequest()
         {
             message.StatusCode = HttpStatusCode.BadRequest;
@@ -96,7 +94,7 @@ namespace NSuperTestTests.Assertions
                 .End();
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertUnauthorized()
         {
             message.StatusCode = HttpStatusCode.Unauthorized;
@@ -106,7 +104,7 @@ namespace NSuperTestTests.Assertions
                 .End();
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertRedirect()
         {
             message.StatusCode = HttpStatusCode.Redirect;
@@ -116,7 +114,7 @@ namespace NSuperTestTests.Assertions
                 .End();
         }
 
-        [Test]
+        [Fact]
         public void ShouldThrowAssertStatusCodes()
         {
             Action action = () => builder.Expect(401).End();
@@ -124,7 +122,7 @@ namespace NSuperTestTests.Assertions
                 .WithMessage("Expected status code Unauthorized (401) but got Ok (200)");
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertStatusAndCallback()
         {
             builder
@@ -134,7 +132,7 @@ namespace NSuperTestTests.Assertions
                 });
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertBody()
         {
             builder
@@ -142,7 +140,7 @@ namespace NSuperTestTests.Assertions
                 .End();
         }
 
-        [Test]
+        [Fact]
         public void ShouldThrowBadBody()
         {
             Action a = () => builder.Expect("Goodbye World").End();
@@ -151,7 +149,7 @@ namespace NSuperTestTests.Assertions
                 .WithMessage("Expected body 'Goodbye World' but got 'Hello World'");
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertBodyAndCallback()
         {
             builder
@@ -161,7 +159,7 @@ namespace NSuperTestTests.Assertions
                 });
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertHeaders()
         {
             builder
@@ -169,21 +167,21 @@ namespace NSuperTestTests.Assertions
                 .End();
         }
 
-        [Test]
+        [Fact]
         public void ShouldThrowBadHeaderName()
         {
             Action a = () => builder.Expect("Content", "100").End();
             a.ShouldThrow<Exception>().WithMessage("Header 'Content' not found on response message");
         }
 
-        [Test]
+        [Fact]
         public void ShouldThrowBadHeaderValue()
         {
             Action a = () => builder.Expect("TestHeader", "100").End();
             a.ShouldThrow<Exception>().WithMessage("Header 'TestHeader' not found with value '100' on response message");
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertHeaderWithCallback()
         {
             builder
@@ -194,7 +192,7 @@ namespace NSuperTestTests.Assertions
                 });
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertCallback()
         {
             builder
@@ -206,7 +204,7 @@ namespace NSuperTestTests.Assertions
                 .End();
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertAnObjectBody()
         {
             message.Content = new StringContent(JsonConvert.SerializeObject(user));
@@ -217,7 +215,7 @@ namespace NSuperTestTests.Assertions
                 .End();
         }
 
-        [Test]
+        [Fact]
         public void ShouldThrowBadObjectBody()
         {
             message.Content = new StringContent(JsonConvert.SerializeObject(user));
@@ -230,7 +228,7 @@ namespace NSuperTestTests.Assertions
             a.ShouldThrow<Exception>();
         }
 
-        [Test]
+        [Fact]
         public void ShouldAssertAnObjectBodyAndCallback()
         {
             message.Content = new StringContent(JsonConvert.SerializeObject(user));

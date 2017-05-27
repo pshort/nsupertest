@@ -1,6 +1,5 @@
 ﻿using Moq;
 using NSuperTest;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,18 +7,17 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace NSuperTestTests.Agent
 {
-    [TestFixture]
     public class AgentTests
     {
         Mock<IHttpRequestClient> client;
         ITestBuilder builder;
         HttpRequestMessage message;
 
-        [SetUp]
-        public void Init()
+        public AgentTests()
         {
             client = new Mock<IHttpRequestClient>();
             client.Setup(c => c.MakeRequest(It.IsAny<HttpRequestMessage>()))
@@ -28,7 +26,7 @@ namespace NSuperTestTests.Agent
             builder = TestBuilderFactory.Create("/test", client.Object);
         }
 
-        [Test]
+        [Fact]
         public void ShouldPerformGet()
         {
             builder.SetMethod(HttpMethod.Get);
@@ -42,7 +40,7 @@ namespace NSuperTestTests.Agent
                 Times.Once());
         }
 
-        [Test]
+        [Fact]
         public void ShouldPerformPost()
         {
             builder.SetMethod(HttpMethod.Post);
@@ -56,7 +54,7 @@ namespace NSuperTestTests.Agent
                 Times.Once());
         }
 
-        [Test]
+        [Fact]
         public void ShouldPerformPut()
         {
             builder.SetMethod(HttpMethod.Put);
@@ -70,7 +68,7 @@ namespace NSuperTestTests.Agent
                 Times.Once());
         }
 
-        [Test]
+        [Fact]
         public void ShouldPerformDelete()
         {
             builder.SetMethod(HttpMethod.Delete);
@@ -84,7 +82,7 @@ namespace NSuperTestTests.Agent
                 Times.Once());
         }
 
-        [Test]
+        [Fact]
         public void ShouldSetHeader()
         {
             builder.SetMethod(HttpMethod.Post);
@@ -99,7 +97,7 @@ namespace NSuperTestTests.Agent
                 Times.Once());
         }
 
-        [Test]
+        [Fact]
         public void ShouldSetBearerToken()
         {
             builder.SetMethod(HttpMethod.Get);
@@ -114,7 +112,7 @@ namespace NSuperTestTests.Agent
                 Times.Once());
         }
 
-        [Test]
+        [Fact]
         public void ShouldSetBearerByFuncWithString()
         {
             builder.SetMethod(HttpMethod.Get);
@@ -129,7 +127,7 @@ namespace NSuperTestTests.Agent
                 Times.Once());
         }
 
-        [Test]
+        [Fact]
         public void ShouldSetBearerByFuncWithTaskOfString()
         {
             builder.SetMethod(HttpMethod.Get);
@@ -148,7 +146,7 @@ namespace NSuperTestTests.Agent
                 Times.Once());
         }
 
-        [Test]
+        [Fact]
         public void ShouldSetPostBody()
         {
             builder.SetMethod(HttpMethod.Post);
@@ -165,7 +163,7 @@ namespace NSuperTestTests.Agent
         }
 
 
-        [Test]
+        [Fact]
         public void ShouldSetPostMultiPart()
         {
             builder.SetMethod(HttpMethod.Post);

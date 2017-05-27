@@ -1,17 +1,12 @@
 ﻿using FluentAssertions;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Xunit;
+using NSuperTest;
 
 namespace NSuperTest.Tests.Servers
 {
-    [TestFixture]
     public class ServerTests
     {
-        [Test]
+        [Fact]
         public void ShouldCreateWithUrl()
         {
             var server = new Server("http://www.google.com");
@@ -24,7 +19,7 @@ namespace NSuperTest.Tests.Servers
             testBuilder.Should().BeAssignableTo<ITestBuilder>();
         }
 
-        [Test]
+        [Fact]
         public void ShouldCreateWithAStartupClass()
         {
             var server = new Server<Startup>();
@@ -36,7 +31,7 @@ namespace NSuperTest.Tests.Servers
             testBuilder.Should().BeAssignableTo<ITestBuilder>();
         }
 
-        [Test]
+        [Fact]
         public void ShouldCreateFromConfig()
         {
             var server = new Server();

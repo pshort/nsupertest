@@ -1,0 +1,25 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "0.1.0",
+    "tasks": [
+        {
+            "taskName": "build",
+            "isBuildCommand": true,
+            "command": "powershell",
+            "args": [
+                "./build.ps1"
+            ],
+            "showOutput": "always"
+        },
+        {
+            "taskName": "test",
+            "isTestCommand": true,
+            "command": "powershell",
+            "args": [
+                "./test.ps1"
+            ],
+            "showOutput": "always"
+        }
+    ]
+}
