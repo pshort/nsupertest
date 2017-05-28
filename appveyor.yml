@@ -1,23 +1,24 @@
 
-version: 0.1.{build}
+version: 2.0.{build}
+
+install:
+    - cmd: >-
+        dotnet restore NSuperTest/NSuperTest.csproj
+        dotnet restore NSuperTest.Tests/NSuperTest.csproj
+        dotnet restore TestWebApi/TestApi/TestApi.csproj
+        dotnet restore TestWebApi/TestApi.Tests/TestApi.Tests.csproj
 
 branches:
   only:
-    - master
+    - 2.x
 
 skip_non_tags: true
 
-assembly_info:
-  patch: true
-
-configuration: Release
-
-before_build:
-  - nuget restore
-
 build:
-  project: NSuperTest.sln
-  publish_nuget: true
+    verbosity: minimal
+
+after_build:
+    - cmd: dotnet publish
 
 deploy:
   provider: NuGet
