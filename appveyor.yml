@@ -4,15 +4,14 @@ version: 2.0.{build}
 install:
     - cmd: >-
         powershell ./restore.ps1
+        powershell ./build.ps1
+        powershell ./test.ps1
 
 branches:
   only:
     - 2.x
 
 skip_non_tags: true
-
-build:
-    verbosity: minimal
 
 after_build:
     - cmd: dotnet publish NSuperTest/NSuperTest.csproj --output %appveyor_build_folder%/dist
