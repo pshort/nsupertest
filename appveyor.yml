@@ -15,7 +15,10 @@ build:
     verbosity: minimal
 
 after_build:
-    - cmd: dotnet publish
+    - cmd: dotnet publish NSuperTest/NSuperTest.csproj --output %appveyor_build_folder%/dist
+
+artifacts:
+    - path: dist
 
 deploy:
   provider: NuGet
