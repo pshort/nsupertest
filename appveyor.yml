@@ -14,13 +14,8 @@ branches:
 skip_non_tags: true
 
 after_build:
-    - cmd: dotnet publish NSuperTest/NSuperTest.csproj --output %appveyor_build_folder%/dist
+    - cmd: powershell ./publish.ps1
 
 artifacts:
     - path: dist
 
-deploy:
-  provider: NuGet
-  api_key:
-    secure: GfdeGjw0Hl19JAeHkWGVB0HAgERXEgWOwZIbmiCrVBOas6lPbOqinzHo+FwjpC8C
-  artifact: /.*\.nupkg/
