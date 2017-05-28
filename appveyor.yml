@@ -3,7 +3,7 @@ version: 2.0.{build}
 
 install:
     - cmd: >-
-        ./restore.ps1
+        powershell restore.ps1
 
 branches:
   only:
