@@ -10,6 +10,9 @@ namespace TestApi.Tests
     {
         Server server;
 
+        const string value1 = "value1";
+        const string value2 = "value2";
+
         public ValuesTests()
         {
             server = new Server<Startup>();
@@ -22,9 +25,9 @@ namespace TestApi.Tests
                 .Get("/api/values")
                 .Expect(200)
                 .End<IEnumerable<string>>((r, m) => {
-                    Assert.Equal(m.Count(), 2);
-                    Assert.Equal(m.ElementAt(0), "value1");
-                    Assert.Equal(m.ElementAt(1), "value2");
+                    Assert.Equal(2, m.Count());
+                    Assert.Equal(value1, m.ElementAt(0));
+                    Assert.Equal(value2, m.ElementAt(1));
                 });
         }
     }
