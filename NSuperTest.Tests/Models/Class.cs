@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NSuperTestTests.Models
+namespace NSuperTest.Tests.Models
 {
     public class Class
     {

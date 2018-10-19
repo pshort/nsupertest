@@ -1,5 +1,5 @@
 {
     "nsupertest": {
-        "appStartup": "NSuperTest.Tests.Startup, NSuperTest.Test"
+        "appStartup": "NSuperTest.Tests"
     }
 }

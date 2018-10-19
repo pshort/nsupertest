@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace NSuperTestTests.Agent
+namespace NSuperTest.Tests.Agent
 {
     public class AgentTests
     {

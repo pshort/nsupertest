@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Newtonsoft.Json;
-using NSuperTestTests.Models;
+using NSuperTest.Tests.Models;
 using Xunit;
 
-namespace NSuperTestTests.Assertions
+namespace NSuperTest.Tests.Assertions
 {
     public class AssertionTests
     {

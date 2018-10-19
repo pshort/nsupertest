@@ -85,7 +85,7 @@ namespace NSuperTest
 
             // try
             // {
-                StartServer(config);
+            StartServer(config);
             // }
             // catch (HttpListenerException ex)
             // {
@@ -112,6 +112,8 @@ namespace NSuperTest
             {
                 throw new Exception("Please provide a server start class using the nsupertest:appStartup app setting");
             }
+
+            
 
             try
             {
