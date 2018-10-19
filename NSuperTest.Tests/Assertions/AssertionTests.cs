@@ -118,7 +118,7 @@ namespace NSuperTestTests.Assertions
         public void ShouldThrowAssertStatusCodes()
         {
             Action action = () => builder.Expect(401).End();
-            action.ShouldThrow<Exception>()
+            action.Should().Throw<Exception>()
                 .WithMessage("Expected status code Unauthorized (401) but got Ok (200)");
         }
 
@@ -128,7 +128,8 @@ namespace NSuperTestTests.Assertions
             builder
                 .Expect(200, m =>
                 {
-                    m.StatusCode.ShouldBeEquivalentTo<HttpStatusCode>(HttpStatusCode.OK);
+                    m.StatusCode.Should()
+                        .BeEquivalentTo<HttpStatusCode>(HttpStatusCode.OK);
                 });
         }
 
@@ -145,7 +146,8 @@ namespace NSuperTestTests.Assertions
         {
             Action a = () => builder.Expect("Goodbye World").End();
 
-            a.ShouldThrow<Exception>()
+            a.Should()
+                .Throw<Exception>()
                 .WithMessage("Expected body 'Goodbye World' but got 'Hello World'");
         }
 
@@ -171,14 +173,16 @@ namespace NSuperTestTests.Assertions
         public void ShouldThrowBadHeaderName()
         {
             Action a = () => builder.Expect("Content", "100").End();
-            a.ShouldThrow<Exception>().WithMessage("Header 'Content' not found on response message");
+            a.Should()
+                .Throw<Exception>().WithMessage("Header 'Content' not found on response message");
         }
 
         [Fact]
         public void ShouldThrowBadHeaderValue()
         {
             Action a = () => builder.Expect("TestHeader", "100").End();
-            a.ShouldThrow<Exception>().WithMessage("Header 'TestHeader' not found with value '100' on response message");
+            a.Should()
+                .Throw<Exception>().WithMessage("Header 'TestHeader' not found with value '100' on response message");
         }
 
         [Fact]
@@ -199,7 +203,8 @@ namespace NSuperTestTests.Assertions
                 .Expect(m =>
                 {
                     m.Content.ReadAsStringAsync().Result.Should().Contain("Hello World");
-                    m.StatusCode.ShouldBeEquivalentTo<HttpStatusCode>(HttpStatusCode.OK);
+                    m.StatusCode.Should()
+                        .BeEquivalentTo<HttpStatusCode>(HttpStatusCode.OK);
                 })
                 .End();
         }
@@ -225,7 +230,8 @@ namespace NSuperTestTests.Assertions
                                 .Expect(new User { Name = "Tom", Age = 11, Id = 1 })
                                 .End();
 
-            a.ShouldThrow<Exception>();
+            a.Should()
+                .Throw<Exception>();
         }
 
         [Fact]
@@ -237,7 +243,8 @@ namespace NSuperTestTests.Assertions
             builder
                 .Expect(user, m =>
                 {
-                    m.StatusCode.ShouldBeEquivalentTo<HttpStatusCode>(HttpStatusCode.OK);
+                    m.StatusCode.Should()
+                        .BeEquivalentTo<HttpStatusCode>(HttpStatusCode.OK);
                 });
         }
 
