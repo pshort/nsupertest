@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 
@@ -10,7 +9,6 @@ using Microsoft.Owin.Hosting;
 
 #if NETCOREAPP_2_1
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 #endif
 
 namespace NSuperTest

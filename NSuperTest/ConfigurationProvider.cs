@@ -1,4 +1,10 @@
+#if NETCOREAPP_2_1
 using Microsoft.Extensions.Configuration;
+#endif
+
+#if NETFULL
+using System.Configuration;
+#endif
 
 namespace NSuperTest
 {
