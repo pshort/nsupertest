@@ -1,0 +1,36 @@
+
+either server class (in mem) or not
+
+    if server class (in mem) ->
+        get port from config or set random port
+        combine with address
+        try to start    IN MEM MODE
+            if fail
+                if port from config -> random port + retry
+    else
+        if url
+            set address -> PROXY MODE
+        else
+            if server class
+                get port from config or set random port
+                combine with address
+                start IN MEM MODE
+                    if fail
+                        ifport from config -> random port + retry
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

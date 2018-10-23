@@ -61,7 +61,6 @@ namespace NSuperTest
         /// <param name="address">The base url of the end point to test</param>
         public Server(string address)
         {
-            configuration = new ConfigurationProvider();
             Address = address;
         }
 
@@ -72,10 +71,87 @@ namespace NSuperTest
         {
             #if NETFULL
             var listener = typeof(OwinHttpListener);
-            if(listener != null) {}
+            if(listener != null) { }
             #endif
 
             configuration = new ConfigurationProvider();
+            
+            SetAddress();
+
+            try
+            {
+                Target = StartServer();
+            }
+            catch (HttpListenerException ex)
+            {
+                if (PortFromConfig)
+                    throw new Exception(string.Format("The port {0} specified in nsupertest:port is unavailable", Port), ex);
+
+                SetAddress();
+                Target = StartServer();
+            }
+        }
+
+
+        /// <summary>
+        /// Starts the in-memory server
+        /// </summary>
+        /// <returns>The server</returns>
+        protected virtual IDisposable StartServer()
+        {
+            // Todo: change to new configuration system
+            var appStartup = configuration.ServerClass;
+
+            if (string.IsNullOrEmpty(appStartup))
+            {
+                Throw("Please provide a server start class or Assembly if netcore using the nsupertest:appStartup app setting");
+            }
+
+            try
+            {
+                #if NETCOREAPP_2_1
+
+                var host = new WebHostBuilder()
+                            .UseKestrel()
+                            .UseUrls(new string[] {Address})
+                            .UseStartup(appStartup)
+                            .Build();
+                host.Start();
+
+                #else
+
+                var type = Type.GetType(appStartup, true, false);
+                var options = new StartOptions
+                {
+                    AppStartup = type.FullName,
+                    Port = Port
+                };
+                
+                var host = WebApp.Start(options);
+
+                #endif
+
+                return host;
+            }
+            catch (Exception ex)
+            {
+                Throw("Unable to load the type specified in nsupertest:appStartup", ex);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Get a port int between 1024 and 51024. should be ok..
+        /// </summary>
+        /// <returns></returns>
+        protected int GetRandomPort()
+        {
+            var random = new System.Random(DateTime.Now.Millisecond);
+            return random.Next(50000) + 1024;
+        }
+
+        protected void SetAddress()
+        {
             string port = configuration.Port;
 
             if (!string.IsNullOrEmpty(port))
@@ -97,69 +173,6 @@ namespace NSuperTest
             }
 
             Address = string.Format(UrlFormat, Port);
-
-            Target = StartServer();
-
-            #if NETFULL
-
-            try
-            {
-            }
-            catch (HttpListenerException ex)
-            {
-                if (PortFromConfig)
-                    throw new Exception(string.Format("The port {0} specified in nsupertest:port is unavailable", Port), ex);
-
-                // we clashed ports
-                Port = GetRandomPort();
-                Address = string.Format(UrlFormat, Port);
-                Target = StartServer();
-            }
-
-            #endif
-        }
-
-
-        /// <summary>
-        /// Starts the in-memory server
-        /// </summary>
-        /// <returns>The server</returns>
-        protected virtual IDisposable StartServer()
-        {
-            // Todo: change to new configuration system
-            var appStartup = configuration.ServerClass;
-
-            if (string.IsNullOrEmpty(appStartup))
-            {
-                Throw("Please provide a server start class or Assembly if netcore using the nsupertest:appStartup app setting");
-            }
-
-            try
-            {
-                //return WebApp.Start(options);
-                var host = new WebHostBuilder()
-                            .UseKestrel()
-                            .UseUrls(new string[] {Address})
-                            .UseStartup(appStartup)
-                            .Build();
-
-                host.Start();
-                return host;
-            }
-            catch (Exception ex)
-            {
-                Throw("Unable to load the type specified in nsupertest:appStartup", ex);
-            }
-        }
-
-        /// <summary>
-        /// Get a port int between 1024 and 51024. should be ok..
-        /// </summary>
-        /// <returns></returns>
-        protected int GetRandomPort()
-        {
-            var random = new System.Random(DateTime.Now.Millisecond);
-            return random.Next(50000) + 1024;
         }
 
         /// <summary>
@@ -286,9 +299,7 @@ namespace NSuperTest
         public Server()
             : base()
         {
-            configuration = new ConfigurationProvider();
         }
-
 
         /// <summary>
         /// Starts the in-memory server
@@ -296,12 +307,20 @@ namespace NSuperTest
         /// <returns>The server</returns>
         protected override IDisposable StartServer()
         {
+            #if NETCOREAPP_2_1
+
             var host = new WebHostBuilder()
                         .UseKestrel()
                         .UseUrls(new string[] { Address })
                         .UseStartup<T>()
                         .Build();
             host.Start();
+            
+            #else
+
+            var host = WebApp.Start<T>(Address);
+
+            #endif
 
             return host;
         }
