@@ -2,7 +2,6 @@
 
 Super Test style testing for .net [OWIN](http://owin.org/) web api projects
 
-
 ## About
 
 A small focused library for in memory testing of .net web api projects. Inspiration taken from the excellent [Super Test](https://github.com/visionmedia/supertest) libaray for testing nodejs http servers.
