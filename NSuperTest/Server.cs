@@ -2,8 +2,16 @@
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+
+#if NETFULL
+using Microsoft.Owin.Host.HttpListener;
+using Microsoft.Owin.Hosting;
+#endif
+
+#if NETCOREAPP_2_1
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+#endif
 
 namespace NSuperTest
 {
@@ -12,6 +20,8 @@ namespace NSuperTest
     /// </summary>
     public class Server : IDisposable
     {
+        protected ConfigurationProvider configuration;
+
         private bool disposing;
 
         /// <summary>
@@ -51,6 +61,7 @@ namespace NSuperTest
         /// <param name="address">The base url of the end point to test</param>
         public Server(string address)
         {
+            configuration = new ConfigurationProvider();
             Address = address;
         }
 
@@ -59,18 +70,22 @@ namespace NSuperTest
         /// </summary>
         public Server()
         {
-            var config = new ConfigurationBuilder().AddJsonFile("nsupertest.json", true).Build();   
-            // set up a port
-            var port = config["nsupertest:port"];
+            #if NETFULL
+            var listener = typeof(OwinHttpListener);
+            if(listener != null) {}
+            #endif
+
+            configuration = new ConfigurationProvider();
+            string port = configuration.Port;
 
             if (!string.IsNullOrEmpty(port))
             {
                 int portInt = 0;
                 if (!int.TryParse(port, out portInt))
-                    throw new Exception("Please provide a valid port in nsupertest:port app setting");
+                    Throw("Please provide a valid port in nsupertest:port app setting");
 
                 if (portInt < 1024)
-                    throw new Exception("Please avoid assigning to ports in the well known range");
+                    Throw("Please avoid assigning to ports in the well known range");
 
                 PortFromConfig = true;
                 Port = portInt;
@@ -83,37 +98,41 @@ namespace NSuperTest
 
             Address = string.Format(UrlFormat, Port);
 
-            // try
-            // {
-            StartServer(config);
-            // }
-            // catch (HttpListenerException ex)
-            // {
-            //     if (PortFromConfig)
-            //         throw new Exception(string.Format("The port {0} specified in nsupertest:port is unavailable", Port), ex);
+            Target = StartServer();
 
-            //     // we clashed ports
-            //     Port = GetRandomPort();
-            //     Address = string.Format(UrlFormat, Port);
-            //     Target = StartServer(config);
-            // }
+            #if NETFULL
+
+            try
+            {
+            }
+            catch (HttpListenerException ex)
+            {
+                if (PortFromConfig)
+                    throw new Exception(string.Format("The port {0} specified in nsupertest:port is unavailable", Port), ex);
+
+                // we clashed ports
+                Port = GetRandomPort();
+                Address = string.Format(UrlFormat, Port);
+                Target = StartServer();
+            }
+
+            #endif
         }
+
 
         /// <summary>
         /// Starts the in-memory server
         /// </summary>
         /// <returns>The server</returns>
-        protected virtual IDisposable StartServer(IConfigurationRoot config)
+        protected virtual IDisposable StartServer()
         {
             // Todo: change to new configuration system
-            var appStartup = config["nsupertest:appstartup"];
+            var appStartup = configuration.ServerClass;
 
             if (string.IsNullOrEmpty(appStartup))
             {
-                throw new Exception("Please provide a server start class using the nsupertest:appStartup app setting");
+                Throw("Please provide a server start class or Assembly if netcore using the nsupertest:appStartup app setting");
             }
-
-            
 
             try
             {
@@ -129,7 +148,7 @@ namespace NSuperTest
             }
             catch (Exception ex)
             {
-                throw new Exception("Unable to load the type specified in nsupertest:appStartup", ex);
+                Throw("Unable to load the type specified in nsupertest:appStartup", ex);
             }
         }
 
@@ -227,6 +246,26 @@ namespace NSuperTest
             }
         }
 
+        private void Throw(string message)
+        {
+            #if NETFULL
+            throw new ApplicationException(message);
+            #endif
+            #if NETCOREAPP_2_1
+            throw new Exception(message);
+            #endif
+        }
+
+        private void Throw(string message, Exception ex)
+        {
+            #if NETFULL
+            throw new ApplicationException(message, ex);
+            #endif
+            #if NETCOREAPP_2_1
+            throw new Exception(message, ex);
+            #endif
+        }
+
         /// <summary>
         /// Clean up allocated resources
         /// </summary>
@@ -247,13 +286,15 @@ namespace NSuperTest
         public Server()
             : base()
         {
+            configuration = new ConfigurationProvider();
         }
+
 
         /// <summary>
         /// Starts the in-memory server
         /// </summary>
         /// <returns>The server</returns>
-        protected override IDisposable StartServer(IConfigurationRoot config)
+        protected override IDisposable StartServer()
         {
             var host = new WebHostBuilder()
                         .UseKestrel()
