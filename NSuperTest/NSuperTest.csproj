@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;net45</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.1;net45;net46</TargetFrameworks>
     <Authors>Peter Short</Authors>
     <Company />
     <Description>A library to enable consise end to end API testing</Description>
@@ -17,10 +17,10 @@
   </ItemGroup>
 
   <!-- .Net 4.5 Fw build stuff -->
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45'">
-	  <DefineConstants>NET45;NETFULL</DefineConstants>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' Or '$(TargetFramework)' == 'net46'">
+	  <DefineConstants>NETFULL</DefineConstants>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45'">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' Or '$(TargetFramework)' == 'net46'">
     <PackageReference Include="Owin" Version="1.0" />
     <PackageReference Include="Microsoft.Owin" Version="3.0.1" />
     <PackageReference Include="Microsoft.Owin.Host.HttpListener" Version="3.0.1" />
