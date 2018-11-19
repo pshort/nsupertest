@@ -1,4 +1,4 @@
-#if NETCOREAPP_2_1
+#if NETSTANDARD_2_0
 using Microsoft.Extensions.Configuration;
 #endif
 
@@ -17,7 +17,7 @@ namespace NSuperTest
         {
             get
             {
-                #if NETCOREAPP_2_1
+                #if NETSTANDARD_2_0
                 return configuration[startupConfigRoute];
                 #else
                 return ConfigurationManager.AppSettings[startupConfigRoute];
@@ -28,7 +28,7 @@ namespace NSuperTest
         {
             get
             {
-                #if NETCOREAPP_2_1
+                #if NETSTANDARD_2_0
                 return configuration[portConfigRoute];
                 #else
                 return ConfigurationManager.AppSettings[portConfigRoute];
@@ -36,7 +36,7 @@ namespace NSuperTest
             }
         }
 
-        #if NETCOREAPP_2_1
+        #if NETSTANDARD_2_0
         private IConfigurationRoot configuration;
         public ConfigurationProvider(IConfigurationRoot configuration)
         {
@@ -46,7 +46,7 @@ namespace NSuperTest
 
         public ConfigurationProvider()
         {
-            #if NETCOREAPP_2_1
+            #if NETSTANDARD_2_0
             this.configuration = new ConfigurationBuilder().AddJsonFile("nsupertest.json", true).Build();   
             #endif
         }

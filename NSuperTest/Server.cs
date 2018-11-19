@@ -7,7 +7,7 @@ using Microsoft.Owin.Host.HttpListener;
 using Microsoft.Owin.Hosting;
 #endif
 
-#if NETCOREAPP_2_1
+#if NETSTANDARD_2_0
 using Microsoft.AspNetCore.Hosting;
 #endif
 
@@ -107,7 +107,7 @@ namespace NSuperTest
 
             try
             {
-                #if NETCOREAPP_2_1
+                #if NETSTANDARD_2_0
 
                 var host = new WebHostBuilder()
                             .UseKestrel()
@@ -262,7 +262,7 @@ namespace NSuperTest
             #if NETFULL
             throw new ApplicationException(message);
             #endif
-            #if NETCOREAPP_2_1
+            #if NETSTANDARD_2_0
             throw new Exception(message);
             #endif
         }
@@ -272,7 +272,7 @@ namespace NSuperTest
             #if NETFULL
             throw new ApplicationException(message, ex);
             #endif
-            #if NETCOREAPP_2_1
+            #if NETSTANDARD_2_0
             throw new Exception(message, ex);
             #endif
         }
@@ -305,7 +305,7 @@ namespace NSuperTest
         /// <returns>The server</returns>
         protected override IDisposable StartServer()
         {
-            #if NETCOREAPP_2_1
+            #if NETSTANDARD_2_0
 
             var host = new WebHostBuilder()
                         .UseKestrel()
