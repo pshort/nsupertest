@@ -50,8 +50,7 @@ namespace NSuperTest.Tests.Servers
         {
             var config = new ConfigurationBuilder().AddCommandLine(new string[] { "test" });
 
-            var server = new Server<Startup>();
-            server.ConfigurationBuilder = config;
+            var server = new Server<Startup>(config);
             
             server.Should().NotBeNull();
 

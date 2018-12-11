@@ -301,7 +301,11 @@ namespace NSuperTest
         }
 
         #if NETSTANDARD_2_0
-        public IConfigurationBuilder ConfigurationBuilder { get; set; }
+        protected IConfigurationBuilder configuration;
+        public Server(IConfigurationBuilder builder) : base()
+        {
+            this.configuration = builder;
+        }
         #endif
 
         /// <summary>
@@ -314,10 +318,10 @@ namespace NSuperTest
 
             IWebHost host;
 
-            if(ConfigurationBuilder != null)
+            if(this.configuration != null)
             {
                 host = new WebHostBuilder()
-                        .UseConfiguration(ConfigurationBuilder.Build())
+                        .UseConfiguration(configuration.Build())
                         .UseKestrel()
                         .UseUrls(new string[] { Address })
                         .UseStartup<T>()
