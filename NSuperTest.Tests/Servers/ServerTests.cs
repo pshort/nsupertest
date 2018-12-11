@@ -2,6 +2,7 @@
 using Xunit;
 using NSuperTest;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace NSuperTest.Tests.Servers
 {
@@ -47,12 +48,11 @@ namespace NSuperTest.Tests.Servers
         [Fact]
         public void ShouldAllowACustomWebhostBuilder()
         {
-            var builder = new WebHostBuilder()
-                                .UseKestrel()
-                                .UseUrls(new string[] { "http://localhost:3099" })
-                                .UseStartup<Startup>();
+            var config = new ConfigurationBuilder().AddCommandLine(new string[] { "test" });
 
-            var server = new Server<Startup>(builder);
+            var server = new Server<Startup>();
+            server.ConfigurationBuilder = config;
+            
             server.Should().NotBeNull();
 
             var testBuilder = server.Get("/");

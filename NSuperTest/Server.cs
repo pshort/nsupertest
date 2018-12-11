@@ -9,6 +9,7 @@ using Microsoft.Owin.Hosting;
 
 #if NETSTANDARD_2_0
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 #endif
 
 namespace NSuperTest
@@ -300,11 +301,7 @@ namespace NSuperTest
         }
 
         #if NETSTANDARD_2_0
-        private IWebHostBuilder _builder;
-        public Server(IWebHostBuilder builder) : base ()
-        {
-            this._builder = builder;
-        }
+        public IConfigurationBuilder ConfigurationBuilder { get; set; }
         #endif
 
         /// <summary>
@@ -315,15 +312,26 @@ namespace NSuperTest
         {
             #if NETSTANDARD_2_0
 
-            if(_builder == null)
+            IWebHost host;
+
+            if(ConfigurationBuilder != null)
             {
-                _builder = new WebHostBuilder()
-                                .UseKestrel()
-                                .UseUrls(new string[] { Address })
-                                .UseStartup<T>();
+                host = new WebHostBuilder()
+                        .UseConfiguration(ConfigurationBuilder.Build())
+                        .UseKestrel()
+                        .UseUrls(new string[] { Address })
+                        .UseStartup<T>()
+                        .Build();
+            }
+            else
+            {
+                host = new WebHostBuilder()
+                        .UseKestrel()
+                        .UseUrls(new string[] { Address })
+                        .UseStartup<T>()
+                        .Build();
             }
 
-            var host = _builder.Build();
             host.Start();
             
             #else
