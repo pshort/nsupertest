@@ -299,6 +299,14 @@ namespace NSuperTest
         {
         }
 
+        #if NETSTANDARD_2_0
+        private IWebHostBuilder _builder;
+        public Server(IWebHostBuilder builder) : base ()
+        {
+            this._builder = builder;
+        }
+        #endif
+
         /// <summary>
         /// Starts the in-memory server
         /// </summary>
@@ -307,11 +315,15 @@ namespace NSuperTest
         {
             #if NETSTANDARD_2_0
 
-            var host = new WebHostBuilder()
-                        .UseKestrel()
-                        .UseUrls(new string[] { Address })
-                        .UseStartup<T>()
-                        .Build();
+            if(_builder == null)
+            {
+                _builder = new WebHostBuilder()
+                                .UseKestrel()
+                                .UseUrls(new string[] { Address })
+                                .UseStartup<T>();
+            }
+
+            var host = _builder.Build();
             host.Start();
             
             #else

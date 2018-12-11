@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Xunit;
 using NSuperTest;
+using Microsoft.AspNetCore.Hosting;
 
 namespace NSuperTest.Tests.Servers
 {
@@ -39,6 +40,22 @@ namespace NSuperTest.Tests.Servers
             server.Should().NotBeNull();
             var testBuilder = server.Get("/");
 
+            testBuilder.Should().NotBeNull();
+            testBuilder.Should().BeAssignableTo<ITestBuilder>();
+        }
+
+        [Fact]
+        public void ShouldAllowACustomWebhostBuilder()
+        {
+            var builder = new WebHostBuilder()
+                                .UseKestrel()
+                                .UseUrls(new string[] { "http://localhost:3099" })
+                                .UseStartup<Startup>();
+
+            var server = new Server<Startup>(builder);
+            server.Should().NotBeNull();
+
+            var testBuilder = server.Get("/");
             testBuilder.Should().NotBeNull();
             testBuilder.Should().BeAssignableTo<ITestBuilder>();
         }
