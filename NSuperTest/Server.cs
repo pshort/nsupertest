@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-
-#if NETFULL
-using Microsoft.Owin.Host.HttpListener;
-using Microsoft.Owin.Hosting;
-#endif
-
-#if NETSTANDARD_2_0
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-#endif
 
 namespace NSuperTest
 {
@@ -58,7 +50,7 @@ namespace NSuperTest
         /// Create a server for testing pointing it to a hosted address
         /// </summary>
         /// <param name="address">The base url of the end point to test</param>
-        public Server(string address)
+        public Server (string address)
         {
             Address = address;
         }
@@ -66,75 +58,54 @@ namespace NSuperTest
         /// <summary>
         /// Default contructor, not for use but for child classes to use
         /// </summary>
-        public Server()
+        public Server ()
         {
-            #if NETFULL
-            var listener = typeof(OwinHttpListener);
-            if(listener != null) { }
-            #endif
+            configuration = new ConfigurationProvider ();
 
-            configuration = new ConfigurationProvider();
-            
-            SetAddress();
+            SetAddress ();
 
             try
             {
-                Target = StartServer();
+                Target = StartServer ();
             }
             catch (HttpListenerException ex)
             {
                 if (PortFromConfig)
-                    throw new Exception(string.Format("The port {0} specified in nsupertest:port is unavailable", Port), ex);
+                    throw new Exception (string.Format ("The port {0} specified in nsupertest:port is unavailable", Port), ex);
 
-                SetAddress();
-                Target = StartServer();
+                SetAddress ();
+                Target = StartServer ();
             }
         }
-
 
         /// <summary>
         /// Starts the in-memory server
         /// </summary>
         /// <returns>The server</returns>
-        protected virtual IDisposable StartServer()
+        protected virtual IDisposable StartServer ()
         {
             // Todo: change to new configuration system
             var appStartup = configuration.ServerClass;
 
-            if (string.IsNullOrEmpty(appStartup))
+            if (string.IsNullOrEmpty (appStartup))
             {
-                Throw("Please provide a server start class or Assembly if netcore using the nsupertest:appStartup app setting");
+                Throw ("Please provide a server start class or Assembly if netcore using the nsupertest:appStartup app setting");
             }
 
             try
             {
-                #if NETSTANDARD_2_0
-
-                var host = new WebHostBuilder()
-                            .UseKestrel()
-                            .UseUrls(new string[] {Address})
-                            .UseStartup(appStartup)
-                            .Build();
-                host.Start();
-
-                #else
-
-                var type = Type.GetType(appStartup, true, false);
-                var options = new StartOptions
-                {
-                    AppStartup = type.FullName,
-                    Port = Port
-                };
-                
-                var host = WebApp.Start(options);
-
-                #endif
+                var host = new WebHostBuilder ()
+                    .UseKestrel ()
+                    .UseUrls (new string[] { Address })
+                    .UseStartup (appStartup)
+                    .Build ();
+                host.Start ();
 
                 return host;
             }
             catch (Exception ex)
             {
-                Throw("Unable to load the type specified in nsupertest:appStartup", ex);
+                Throw ("Unable to load the type specified in nsupertest:appStartup", ex);
             }
             return null;
         }
@@ -143,24 +114,24 @@ namespace NSuperTest
         /// Get a port int between 1024 and 51024. should be ok..
         /// </summary>
         /// <returns></returns>
-        protected int GetRandomPort()
+        protected int GetRandomPort ()
         {
-            var random = new System.Random(DateTime.Now.Millisecond);
-            return random.Next(50000) + 1024;
+            var random = new System.Random (DateTime.Now.Millisecond);
+            return random.Next (50000) + 1024;
         }
 
-        protected void SetAddress()
+        protected void SetAddress ()
         {
             string port = configuration.Port;
 
-            if (!string.IsNullOrEmpty(port))
+            if (!string.IsNullOrEmpty (port))
             {
                 int portInt = 0;
-                if (!int.TryParse(port, out portInt))
-                    Throw("Please provide a valid port in nsupertest:port app setting");
+                if (!int.TryParse (port, out portInt))
+                    Throw ("Please provide a valid port in nsupertest:port app setting");
 
                 if (portInt < 1024)
-                    Throw("Please avoid assigning to ports in the well known range");
+                    Throw ("Please avoid assigning to ports in the well known range");
 
                 PortFromConfig = true;
                 Port = portInt;
@@ -168,10 +139,10 @@ namespace NSuperTest
             else
             {
                 PortFromConfig = false;
-                Port = GetRandomPort();
+                Port = GetRandomPort ();
             }
 
-            Address = string.Format(UrlFormat, Port);
+            Address = string.Format (UrlFormat, Port);
         }
 
         /// <summary>
@@ -179,9 +150,9 @@ namespace NSuperTest
         /// </summary>
         /// <param name="url">The url to Get. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
-        public ITestBuilder Get(string url)
+        public ITestBuilder Get (string url)
         {
-            return Request(HttpMethod.Get, url);
+            return Request (HttpMethod.Get, url);
         }
 
         /// <summary>
@@ -189,9 +160,9 @@ namespace NSuperTest
         /// </summary>
         /// <param name="url">The url to Post to. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
-        public ITestBuilder Post(string url)
+        public ITestBuilder Post (string url)
         {
-            return Request(HttpMethod.Post, url);
+            return Request (HttpMethod.Post, url);
         }
 
         /// <summary>
@@ -199,9 +170,9 @@ namespace NSuperTest
         /// </summary>
         /// <param name="url">The url to Put to. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
-        public ITestBuilder Put(string url)
+        public ITestBuilder Put (string url)
         {
-            return Request(HttpMethod.Put, url);
+            return Request (HttpMethod.Put, url);
         }
 
         /// <summary>
@@ -209,10 +180,10 @@ namespace NSuperTest
         /// </summary>
         /// <param name="url">The url to Patch to. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
-        public ITestBuilder Patch(string url)
+        public ITestBuilder Patch (string url)
         {
-            var patch = new HttpMethod("PATCH");
-            return Request(patch, url);
+            var patch = new HttpMethod ("PATCH");
+            return Request (patch, url);
         }
 
         /// <summary>
@@ -220,9 +191,9 @@ namespace NSuperTest
         /// </summary>
         /// <param name="url">The url to send Delete to. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
-        public ITestBuilder Delete(string url)
+        public ITestBuilder Delete (string url)
         {
-            return Request(HttpMethod.Delete, url);
+            return Request (HttpMethod.Delete, url);
         }
 
         /// <summary>
@@ -231,26 +202,26 @@ namespace NSuperTest
         /// <param name="method">The HTTP method to use</param>
         /// <param name="url">The url to send the request to. Must start with /.</param>
         /// <returns>ITestBuilder to chain assertions</returns>
-        public ITestBuilder Request(HttpMethod method, string url)
+        public ITestBuilder Request (HttpMethod method, string url)
         {
-            var client = new HttpRequestClient(Address);
-            var builder = TestBuilderFactory.Create(url, client, useCamelCase: UseCamelCase);
-            builder.SetMethod(method);
+            var client = new HttpRequestClient (Address);
+            var builder = TestBuilderFactory.Create (url, client, useCamelCase : UseCamelCase);
+            builder.SetMethod (method);
             return builder;
         }
 
         /// <summary>
         /// Clean up in memory resource and tear down any servers..
         /// </summary>
-        public void Dispose()
+        public void Dispose ()
         {
-            if(!disposing)
+            if (!disposing)
             {
                 disposing = true;
 
                 if (Target != null)
                 {
-                    Target.Dispose();
+                    Target.Dispose ();
                     Target = null;
                 }
 
@@ -258,33 +229,23 @@ namespace NSuperTest
             }
         }
 
-        private void Throw(string message)
+        private void Throw (string message)
         {
-            #if NETFULL
-            throw new ApplicationException(message);
-            #endif
-            #if NETSTANDARD_2_0
-            throw new Exception(message);
-            #endif
+            throw new Exception (message);
         }
 
-        private void Throw(string message, Exception ex)
-        {
-            #if NETFULL
-            throw new ApplicationException(message, ex);
-            #endif
-            #if NETSTANDARD_2_0
-            throw new Exception(message, ex);
-            #endif
-        }
+        private void Throw (string message, Exception ex)
+            {
+                throw new Exception (message, ex);
+            }
 
-        /// <summary>
-        /// Clean up allocated resources
-        /// </summary>
-        ~Server()
-        {
-            this.Dispose();
-        }
+            /// <summary>
+            /// Clean up allocated resources
+            /// </summary>
+            ~Server ()
+            {
+                this.Dispose ();
+            }
     }
     /// <summary>
     /// An object to create an in memery api server for testing Apis.
@@ -295,54 +256,38 @@ namespace NSuperTest
         /// <summary>
         /// Create a new server
         /// </summary>
-        public Server()
-            : base()
-        {
-        }
+        public Server () : base () { }
 
-        #if NETSTANDARD_2_0
         protected IConfigurationBuilder configuration;
-        public Server(IConfigurationBuilder builder) : base()
-        {
-            this.configuration = builder;
-        }
-        #endif
+        public Server (IConfigurationBuilder builder) : base () { }
 
         /// <summary>
         /// Starts the in-memory server
         /// </summary>
         /// <returns>The server</returns>
-        protected override IDisposable StartServer()
+        protected override IDisposable StartServer ()
         {
-            #if NETSTANDARD_2_0
-
             IWebHost host;
 
-            if(this.configuration != null)
+            if (this.configuration != null)
             {
-                host = new WebHostBuilder()
-                        .UseConfiguration(configuration.Build())
-                        .UseKestrel()
-                        .UseUrls(new string[] { Address })
-                        .UseStartup<T>()
-                        .Build();
+                host = new WebHostBuilder ()
+                    .UseConfiguration (configuration.Build ())
+                    .UseKestrel ()
+                    .UseUrls (new string[] { Address })
+                    .UseStartup<T> ()
+                    .Build ();
             }
             else
             {
-                host = new WebHostBuilder()
-                        .UseKestrel()
-                        .UseUrls(new string[] { Address })
-                        .UseStartup<T>()
-                        .Build();
+                host = new WebHostBuilder ()
+                    .UseKestrel ()
+                    .UseUrls (new string[] { Address })
+                    .UseStartup<T> ()
+                    .Build ();
             }
 
-            host.Start();
-            
-            #else
-
-            var host = WebApp.Start<T>(Address);
-
-            #endif
+            host.Start ();
 
             return host;
         }

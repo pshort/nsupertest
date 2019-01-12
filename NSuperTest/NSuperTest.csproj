@@ -1,33 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45;net46</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <Authors>Peter Short</Authors>
     <Company />
+    <Version>3.1.0</Version>
     <Description>A library to enable consise end to end API testing</Description>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
-  <!-- .Net Core 2.1 APP -->
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
-	  <DefineConstants>NETSTANDARD_2_0</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.4" />
-  </ItemGroup>
-
-  <!-- .Net 4.5 Fw build stuff -->
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' Or '$(TargetFramework)' == 'net46'">
-	  <DefineConstants>NETFULL</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' Or '$(TargetFramework)' == 'net46'">
-    <PackageReference Include="Owin" Version="1.0" />
-    <PackageReference Include="Microsoft.Owin" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.Host.HttpListener" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Owin.Hosting" Version="3.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="6.0.8" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Configuration" />
   </ItemGroup>
 
 </Project>
