@@ -105,6 +105,16 @@ namespace NSuperTest.Tests.Assertions
         }
 
         [Fact]
+        public void ShouldAssertForbidden()
+        {
+            message.StatusCode = HttpStatusCode.Forbidden;
+
+            builder
+                .ExpectForbidden()
+                .End();
+        }
+
+        [Fact]
         public void ShouldAssertRedirect()
         {
             message.StatusCode = HttpStatusCode.Redirect;
@@ -115,11 +125,19 @@ namespace NSuperTest.Tests.Assertions
         }
 
         [Fact]
-        public void ShouldThrowAssertStatusCodes()
+        public void ShouldThrowAssertStatusCodesUnauthorized()
         {
             Action action = () => builder.Expect(401).End();
             action.Should().Throw<Exception>()
                 .WithMessage("Expected status code Unauthorized (401) but got Ok (200)");
+        }
+
+        [Fact]
+        public void ShouldThrowAssertStatusCodesForbidden()
+        {
+            Action action = () => builder.Expect(403).End();
+            action.Should().Throw<Exception>()
+                .WithMessage("Expected status code Forbidden (403) but got Ok (200)");
         }
 
         [Fact]
