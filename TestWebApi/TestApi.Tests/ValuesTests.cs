@@ -9,7 +9,7 @@ namespace TestApi.Tests
 {
     public class ValuesTests
     {
-        Server server;
+        Server<Startup> server;
 
         const string value1 = "three";
         const string value2 = "four";
