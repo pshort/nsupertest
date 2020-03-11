@@ -119,6 +119,18 @@ namespace NSuperTest
             End(callback);
         }
 
+        public ITestBuilder ExpectForbidden()
+        {
+            assertions.Add(() => AssertCode(403, response));
+            return this;
+        }
+
+        public void ExpectForbidden(Action<HttpResponseMessage> callback)
+        {
+            assertions.Add(() => AssertCode(403, response));
+            End(callback);
+        }
+
         public ITestBuilder ExpectRedirect()
         {
             assertions.Add(() => AssertCode(302, response));

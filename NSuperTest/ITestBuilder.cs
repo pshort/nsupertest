@@ -92,6 +92,17 @@ namespace NSuperTest
         void ExpectUnauthorized(Action<HttpResponseMessage> callback);
 
         /// <summary>
+        /// Expect 403 forbidden response code
+        /// </summary>
+        /// <returns>ITestBuilder for chaining</returns>
+        ITestBuilder ExpectForbidden();
+        /// <summary>
+        /// Expect 403 forbidden response code and end the chain
+        /// </summary>
+        /// <param name="callback">A final callback function to end the chain</param>
+        void ExpectForbidden(Action<HttpResponseMessage> callback);
+
+        /// <summary>
         /// Expect 302 redirect response code
         /// </summary>
         /// <returns>ITestBuilder for chaining</returns>
