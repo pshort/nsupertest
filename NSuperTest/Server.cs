@@ -303,12 +303,14 @@ namespace NSuperTest
         public Server()
             : base()
         {
+            Console.WriteLine("Starting generic server with no args");
         }
 
         #if NETSTANDARD_2_0
         protected new IConfigurationBuilder configuration;
         public Server(IConfigurationBuilder builder)
         {
+            Console.WriteLine("Starting generic server with config builder");
             this.configuration = builder;
             base.RunServer();
         }
@@ -326,6 +328,7 @@ namespace NSuperTest
 
             if(this.configuration != null)
             {
+                Console.WriteLine("Config not null, hooking into webhost builder");
                 host = new WebHostBuilder()
                         .UseConfiguration(configuration.Build())
                         .UseKestrel()
@@ -335,6 +338,7 @@ namespace NSuperTest
             }
             else
             {
+                Console.WriteLine("Config is null, generic webhost builder");
                 host = new WebHostBuilder()
                         .UseKestrel()
                         .UseUrls(new string[] { Address })
