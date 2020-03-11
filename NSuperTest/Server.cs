@@ -306,7 +306,7 @@ namespace NSuperTest
         }
 
         #if NETSTANDARD_2_0
-        protected IConfigurationBuilder configuration;
+        protected new IConfigurationBuilder configuration;
         public Server(IConfigurationBuilder builder)
         {
             this.configuration = builder;
