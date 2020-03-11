@@ -1,4 +1,10 @@
+#if NETSTANDARD_2_0
 using Microsoft.Extensions.Configuration;
+#endif
+
+#if NETFULL
+using System.Configuration;
+#endif
 
 namespace NSuperTest
 {
@@ -11,26 +17,38 @@ namespace NSuperTest
         {
             get
             {
+                #if NETSTANDARD_2_0
                 return configuration[startupConfigRoute];
+                #else
+                return ConfigurationManager.AppSettings[startupConfigRoute];
+                #endif
             }
         }
         public string Port
         {
             get
             {
+                #if NETSTANDARD_2_0
                 return configuration[portConfigRoute];
+                #else
+                return ConfigurationManager.AppSettings[portConfigRoute];
+                #endif
             }
         }
 
+        #if NETSTANDARD_2_0
         private IConfigurationRoot configuration;
-        public ConfigurationProvider (IConfigurationRoot configuration)
+        public ConfigurationProvider(IConfigurationRoot configuration)
         {
             this.configuration = configuration;
         }
+        #endif
 
-        public ConfigurationProvider ()
+        public ConfigurationProvider()
         {
-            this.configuration = new ConfigurationBuilder ().AddJsonFile ("nsupertest.json", true).Build ();
+            #if NETSTANDARD_2_0
+            this.configuration = new ConfigurationBuilder().AddJsonFile("nsupertest.json", true).Build();   
+            #endif
         }
     }
 }
