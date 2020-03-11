@@ -75,6 +75,11 @@ namespace NSuperTest
 
             configuration = new ConfigurationProvider();
             
+            RunServer();
+        }
+
+        protected void RunServer()
+        {
             SetAddress();
 
             try
@@ -302,9 +307,10 @@ namespace NSuperTest
 
         #if NETSTANDARD_2_0
         protected IConfigurationBuilder configuration;
-        public Server(IConfigurationBuilder builder) : base()
+        public Server(IConfigurationBuilder builder)
         {
             this.configuration = builder;
+            base.RunServer();
         }
         #endif
 

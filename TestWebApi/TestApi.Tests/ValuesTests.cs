@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using NSuperTest;
 using Xunit;
 
@@ -10,19 +11,20 @@ namespace TestApi.Tests
     {
         Server server;
 
-        const string value1 = "value1";
-        const string value2 = "value2";
+        const string value1 = "three";
+        const string value2 = "four";
 
         public ValuesTests()
         {
-            server = new Server<Startup>();
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+            server = new Server<Startup>(config);
         }
 
         [Fact]
         public void ShouldGiveValues()
         {
             server
-                .Get("/api/values")
+                .Get("/values")
                 .Expect(200)
                 .End<IEnumerable<string>>((r, m) => {
                     Assert.Equal(2, m.Count());
