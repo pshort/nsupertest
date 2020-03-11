@@ -343,7 +343,6 @@ namespace NSuperTest
             }
 
             host.Start();
-            
             #else
 
             var host = WebApp.Start<T>(Address);
