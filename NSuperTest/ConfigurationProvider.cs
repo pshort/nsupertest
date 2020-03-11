@@ -14,6 +14,7 @@ namespace NSuperTest
                 return configuration[startupConfigRoute];
             }
         }
+
         public string Port
         {
             get
