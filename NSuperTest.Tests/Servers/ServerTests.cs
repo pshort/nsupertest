@@ -58,5 +58,19 @@ namespace NSuperTest.Tests.Servers
             testBuilder.Should().NotBeNull();
             testBuilder.Should().BeAssignableTo<ITestBuilder>();
         }
+
+        [Fact]
+        public void ShouldAllowCustomBuildersOnSig()
+        {
+            var builder = new WebHostBuilder().UseEnvironment("Test");
+
+            var server = new Server<Startup>(builder);
+
+            server.Should().NotBeNull();
+            
+            var testBuilder = server.Get("/");
+            testBuilder.Should().NotBeNull();
+            testBuilder.Should().BeAssignableTo<ITestBuilder>();
+        }
     }
 }

@@ -40,6 +40,18 @@ namespace NSuperTest
             base.RunServer();
         }
 
+        protected new IWebHostBuilder builder;
+        /// <summary>
+        /// Create a new server by supplying the builder yourself. The Build call will be called by the server, and Kestrel and a
+        /// private address will be used, but otherwise all options are left to you.
+        /// </summary>
+        /// <param name="builder">A web host builder to configure the server</param>
+        public Server(IWebHostBuilder builder)
+        {
+            this.builder = builder;
+            base.RunServer();
+        }
+
         /// <summary>
         /// Starts the in-memory server
         /// </summary>
@@ -47,7 +59,16 @@ namespace NSuperTest
         protected override IDisposable StartServer()
         {
             IWebHost host;
-            if (this.configuration != null)
+            if(this.builder != null)
+            {
+                Console.WriteLine("Using a custom builder");
+                host = builder
+                        .UseKestrel()
+                        .UseUrls(new string[] {  Address })
+                        .UseStartup<T>()
+                        .Build();
+            }
+            else if (this.configuration != null)
             {
                 Console.WriteLine("Config not null, hooking into webhost builder");
                 host = new WebHostBuilder()
@@ -70,5 +91,7 @@ namespace NSuperTest
             host.Start();
             return host;
         }
+
+
     }
 }
