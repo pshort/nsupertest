@@ -40,7 +40,7 @@ namespace NSuperTest
             base.RunServer();
         }
 
-        protected new IWebHostBuilder builder;
+        protected IWebHostBuilder builder;
         /// <summary>
         /// Create a new server by supplying the builder yourself. The Build call will be called by the server, and Kestrel and a
         /// private address will be used, but otherwise all options are left to you.
