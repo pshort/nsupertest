@@ -125,7 +125,7 @@ namespace NSuperTest.Tests.Assertions
         }
 
         [Fact]
-        public async Task ShouldThrowAssertStatusCodesUnauthorized()
+        public void ShouldThrowAssertStatusCodesUnauthorized()
         {
             Func<Task> action = async () => await builder.Expect(401).End();
             action.Should().Throw<Exception>()
@@ -133,7 +133,7 @@ namespace NSuperTest.Tests.Assertions
         }
 
         [Fact]
-        public async Task ShouldThrowAssertStatusCodesForbidden()
+        public void ShouldThrowAssertStatusCodesForbidden()
         {
             Func<Task> action = async () => await builder.Expect(403).End();
             action.Should().Throw<Exception>()
@@ -160,7 +160,7 @@ namespace NSuperTest.Tests.Assertions
         }
 
         [Fact]
-        public async Task ShouldThrowBadBody()
+        public void ShouldThrowBadBody()
         {
             Func<Task> a = async () => await builder.Expect("Goodbye World").End();
 
@@ -188,7 +188,7 @@ namespace NSuperTest.Tests.Assertions
         }
 
         [Fact]
-        public async Task ShouldThrowBadHeaderName()
+        public void ShouldThrowBadHeaderName()
         {
             Func<Task> a = async () => await builder.Expect("Content", "100").End();
             a.Should()
@@ -196,7 +196,7 @@ namespace NSuperTest.Tests.Assertions
         }
 
         [Fact]
-        public async Task ShouldThrowBadHeaderValue()
+        public void ShouldThrowBadHeaderValue()
         {
             Func<Task> a = async () => await builder.Expect("TestHeader", "100").End();
             a.Should()
@@ -239,7 +239,7 @@ namespace NSuperTest.Tests.Assertions
         }
 
         [Fact]
-        public async Task ShouldThrowBadObjectBody()
+        public void ShouldThrowBadObjectBody()
         {
             message.Content = new StringContent(JsonConvert.SerializeObject(user));
             clientMock.Setup(c => c.MakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
