@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace NSuperTest
 {
@@ -14,9 +15,9 @@ namespace NSuperTest
             client.BaseAddress = new Uri(baseUri);
         }
 
-        public HttpResponseMessage MakeRequest(HttpRequestMessage message)
+        public Task<HttpResponseMessage> MakeRequest(HttpRequestMessage message)
         {
-            return client.SendAsync(message).Result;
+            return client.SendAsync(message);
         }
     }
 }

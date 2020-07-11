@@ -21,7 +21,7 @@ namespace NSuperTest
         /// </summary>
         /// <param name="code">The code to expect</param>
         /// <param name="callback">A final callback function to end the chain</param>
-        void Expect(int code, Action<HttpResponseMessage> callback);
+        Task Expect(int code, Action<HttpResponseMessage> callback);
 
         /// <summary>
         /// Expect a HTTP response code
@@ -34,9 +34,9 @@ namespace NSuperTest
         /// </summary>
         /// <param name="code">The code to expect</param>
         /// <param name="callback">A final callback function to end the chain</param>
-        void Expect(HttpStatusCode code, Action<HttpResponseMessage> callback);
+        Task Expect(HttpStatusCode code, Action<HttpResponseMessage> callback);
 
-        /// <summary>
+        /// <summary
         /// Expect 200 success response code
         /// </summary>
         /// <returns>ITestBuilder for chaining</returns>
@@ -45,7 +45,7 @@ namespace NSuperTest
         /// Expect 200 success response code and end the chain
         /// </summary>
         /// <param name="callback">A final callback function to end the chain</param>
-        void ExpectOk(Action<HttpResponseMessage> callback);
+        Task ExpectOk(Action<HttpResponseMessage> callback);
 
         /// <summary>
         /// Expect 201 created response code
@@ -56,7 +56,7 @@ namespace NSuperTest
         /// Expect 201 created response code and end the chain
         /// </summary>
         /// <param name="callback">A final callback function to end the chain</param>
-        void ExpectCreated(Action<HttpResponseMessage> callback);
+        Task ExpectCreated(Action<HttpResponseMessage> callback);
 
         /// <summary>
         /// Expect 404 not found response code
@@ -67,7 +67,7 @@ namespace NSuperTest
         /// Expect 404 not found response code and end the chain
         /// </summary>
         /// <param name="callback">A final callback function to end the chain</param>
-        void ExpectNotFound(Action<HttpResponseMessage> callback);
+        Task ExpectNotFound(Action<HttpResponseMessage> callback);
 
         /// <summary>
         /// Expect 400 bad request response code
@@ -78,7 +78,7 @@ namespace NSuperTest
         /// Expect 400 bad request response code and end the chain
         /// </summary>
         /// <param name="callback">A final callback function to end the chain</param>
-        void ExpectBadRequest(Action<HttpResponseMessage> callback);
+        Task ExpectBadRequest(Action<HttpResponseMessage> callback);
 
         /// <summary>
         /// Expect 401 unauthorized response code
@@ -89,7 +89,7 @@ namespace NSuperTest
         /// Expect 401 unauthorized response code and end the chain
         /// </summary>
         /// <param name="callback">A final callback function to end the chain</param>
-        void ExpectUnauthorized(Action<HttpResponseMessage> callback);
+        Task ExpectUnauthorized(Action<HttpResponseMessage> callback);
 
         /// <summary>
         /// Expect 403 forbidden response code
@@ -100,7 +100,7 @@ namespace NSuperTest
         /// Expect 403 forbidden response code and end the chain
         /// </summary>
         /// <param name="callback">A final callback function to end the chain</param>
-        void ExpectForbidden(Action<HttpResponseMessage> callback);
+        Task ExpectForbidden(Action<HttpResponseMessage> callback);
 
         /// <summary>
         /// Expect 302 redirect response code
@@ -111,7 +111,7 @@ namespace NSuperTest
         /// Expect 302 redirect response code and end the chain
         /// </summary>
         /// <param name="callback">A final callback function to end the chain</param>
-        void ExpectRedirect(Action<HttpResponseMessage> callback);
+        Task ExpectRedirect(Action<HttpResponseMessage> callback);
 
         /// <summary>
         /// Expect a string body
@@ -124,7 +124,7 @@ namespace NSuperTest
         /// </summary>
         /// <param name="body">The string body to expect in the response</param>
         /// <param name="callback">A final callback function to end the chain</param>
-        void Expect(string body, Action<HttpResponseMessage> callback);
+        Task Expect(string body, Action<HttpResponseMessage> callback);
 
         /// <summary>
         /// Expect an object in the response body
@@ -137,7 +137,7 @@ namespace NSuperTest
         /// </summary>
         /// <param name="body">The response body as an object</param>
         /// <param name="callback">A final callback function to end the chain</param>
-        void Expect(object body, Action<HttpResponseMessage> callback);
+        Task Expect(object body, Action<HttpResponseMessage> callback);
 
         /// <summary>
         /// Expect a specific header and value in the response
@@ -152,7 +152,7 @@ namespace NSuperTest
         /// <param name="header">The header name expected</param>
         /// <param name="value">The header value expected</param>
         /// <param name="callback">A final callback function to end the chain</param>
-        void Expect(string header, string value, Action<HttpResponseMessage> callback);
+        Task Expect(string header, string value, Action<HttpResponseMessage> callback);
 
         /// <summary>
         /// Expect with just a callback for custom expectations
@@ -209,17 +209,17 @@ namespace NSuperTest
         /// <summary>
         /// Ends the chain
         /// </summary>
-        void End();
+        Task End();
         /// <summary>
         /// End the chain with a callback for more expectations
         /// </summary>
         /// <param name="callback">The callback taht contains custom expectations</param>
-        void End(Action<HttpResponseMessage> callback);
+        Task End(Action<HttpResponseMessage> callback);
         /// <summary>
         /// End the chain with a callback and a strong typed body
         /// </summary>
         /// <typeparam name="T">The expected strong type of the body for deserialization</typeparam>
         /// <param name="callback">The callback containing custom expectations</param>
-        void End<T>(Action<HttpResponseMessage, T> callback);
+        Task End<T>(Action<HttpResponseMessage, T> callback);
     }
 }

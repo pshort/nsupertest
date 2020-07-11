@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace NSuperTest
 {
@@ -12,6 +13,6 @@ namespace NSuperTest
         /// </summary>
         /// <param name="message">A HttpRequestMessage object</param>
         /// <returns>The associated HttpResponseMessage</returns>
-        HttpResponseMessage MakeRequest(HttpRequestMessage message);
+        Task<HttpResponseMessage> MakeRequest(HttpRequestMessage message);
     }
 }

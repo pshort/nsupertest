@@ -39,10 +39,10 @@ namespace NSuperTest
             return this;
         }
 
-        public void Expect(int code, Action<HttpResponseMessage> callback)
+        public async Task Expect(int code, Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertCode(code, response));
-            End(callback);
+            await End(callback);
         }
 
         public ITestBuilder Expect(HttpStatusCode code)
@@ -52,11 +52,11 @@ namespace NSuperTest
             return this;
         }
 
-        public void Expect(HttpStatusCode code, Action<HttpResponseMessage> callback)
+        public async Task Expect(HttpStatusCode code, Action<HttpResponseMessage> callback)
         {
             var intCode = (int)code;
             assertions.Add(() => AssertCode(intCode, response));
-            End(callback);
+            await End(callback);
         }
 
         public ITestBuilder ExpectOk()
@@ -65,10 +65,10 @@ namespace NSuperTest
             return this;
         }
 
-        public void ExpectOk(Action<HttpResponseMessage> callback)
+        public async Task ExpectOk(Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertCode(200, response));
-            End(callback);
+            await End(callback);
         }
 
         public ITestBuilder ExpectCreated()
@@ -77,10 +77,10 @@ namespace NSuperTest
             return this;
         }
 
-        public void ExpectCreated(Action<HttpResponseMessage> callback)
+        public async Task ExpectCreated(Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertCode(201, response));
-            End(callback);
+            await End(callback);
         }
 
         public ITestBuilder ExpectNotFound()
@@ -89,10 +89,10 @@ namespace NSuperTest
             return this;
         }
 
-        public void ExpectNotFound(Action<HttpResponseMessage> callback)
+        public async Task ExpectNotFound(Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertCode(404, response));
-            End(callback);
+            await End(callback);
         }
 
         public ITestBuilder ExpectBadRequest()
@@ -101,10 +101,10 @@ namespace NSuperTest
             return this;
         }
 
-        public void ExpectBadRequest(Action<HttpResponseMessage> callback)
+        public async Task ExpectBadRequest(Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertCode(400, response));
-            End(callback);
+            await End(callback);
         }
         
         public ITestBuilder ExpectUnauthorized()
@@ -113,10 +113,10 @@ namespace NSuperTest
             return this;
         }
 
-        public void ExpectUnauthorized(Action<HttpResponseMessage> callback)
+        public async Task ExpectUnauthorized(Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertCode(401, response));
-            End(callback);
+            await End(callback);
         }
 
         public ITestBuilder ExpectForbidden()
@@ -125,10 +125,10 @@ namespace NSuperTest
             return this;
         }
 
-        public void ExpectForbidden(Action<HttpResponseMessage> callback)
+        public async Task ExpectForbidden(Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertCode(403, response));
-            End(callback);
+            await End(callback);
         }
 
         public ITestBuilder ExpectRedirect()
@@ -137,10 +137,10 @@ namespace NSuperTest
             return this;
         }
 
-        public void ExpectRedirect(Action<HttpResponseMessage> callback)
+        public async Task ExpectRedirect(Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertCode(302, response));
-            End(callback);
+            await End(callback);
         }
 
         public ITestBuilder Expect(string body)
@@ -149,11 +149,11 @@ namespace NSuperTest
             return this;
         }
 
-        public void Expect(string body, Action<HttpResponseMessage> callback)
+        public async Task Expect(string body, Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertBody(body, response));
             assertions.Add(() => RunCallback(callback));
-            End();
+            await End();
         }
 
         public ITestBuilder Expect(object body)
@@ -162,10 +162,10 @@ namespace NSuperTest
             return this;
         }
 
-        public void Expect(object body, Action<HttpResponseMessage> callback)
+        public async Task Expect(object body, Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertBody(body, response));
-            End(callback);
+            await End(callback);
         }
 
         public ITestBuilder Expect(string header, string value)
@@ -174,11 +174,11 @@ namespace NSuperTest
             return this;
         }
 
-        public void Expect(string header, string value, Action<HttpResponseMessage> callback)
+        public async Task Expect(string header, string value, Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => AssertHeader(header, value, response));
             assertions.Add(() => RunCallback(callback));
-            End();
+            await End();
         }
 
         public ITestBuilder Expect(Action<HttpResponseMessage> callback)
@@ -187,28 +187,26 @@ namespace NSuperTest
             return this;
         }
 
-        public void End<T>(Action<HttpResponseMessage, T> callback)
+        public async Task End<T>(Action<HttpResponseMessage, T> callback)
         {
             assertions.Add(() => RunStrongTypedCallback<T>(callback));
-            End();
+            await End();
         }
 
-        public void End(Action<HttpResponseMessage> callback)
+        public async Task End(Action<HttpResponseMessage> callback)
         {
             assertions.Add(() => RunCallback(callback));
-            End();
+            await End();
         }
 
-        public void End()
+        public async Task End()
         {
-            response = client.MakeRequest(request);
+            response = await client.MakeRequest(request);
 
             foreach(var assertion in assertions)
             {
                 assertion();
             }
-
-            return;
         }
 
         private void AssertCode(int expected, HttpResponseMessage message)
