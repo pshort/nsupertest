@@ -1,0 +1,34 @@
+
+extension mechanism so that test writers get things like auth
+for free (clearer test code)
+
+builder -> IClassFixture<Server<Startup>>
+
+pipeline extension (so that responsese can be massaged)
+
+expect(AnySuccess) 200 - 299
+
+expect(200, { some object anon }).end();
+
+can you inject into tests? factory mechanism?
+
+support the webapplication factory -> swappable for internal server.
+maybe use the webapplication factory instead? no we cant, its brining a dep i cant handle
+
+Test(IServer server)
+
+server
+    .get("url")
+    .set("cookie", "something")
+    .expect(200, {})
+    .end();
+
+
+
+
+
+
+
+
+
+

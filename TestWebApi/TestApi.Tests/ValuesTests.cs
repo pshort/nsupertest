@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using NSuperTest;
+using TestApi.Tests.Fixtures;
 using Xunit;
 
 namespace TestApi.Tests
 {
-    public class ValuesTests
+    public class ValuesTests : IClassFixture<TestApiFixture>
     {
         Server<Startup> server;
-
         const string value1 = "three";
         const string value2 = "four";
 
-        public ValuesTests()
+        public ValuesTests(TestApiFixture fixture)
         {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json");
-            server = new Server<Startup>(config);
+            server = fixture.Server;
         }
 
         [Fact]

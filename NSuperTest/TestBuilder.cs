@@ -32,6 +32,8 @@ namespace NSuperTest
             this.request.Method = method;
             return this;
         }
+
+        // Status Expectations
         
         public ITestBuilder Expect(int code)
         {
@@ -143,6 +145,8 @@ namespace NSuperTest
             await End(callback);
         }
 
+        // Body Expecations
+
         public ITestBuilder Expect(string body)
         {
             assertions.Add(() => AssertBody(body, response));
@@ -168,6 +172,8 @@ namespace NSuperTest
             await End(callback);
         }
 
+        // header expectations
+
         public ITestBuilder Expect(string header, string value)
         {
             assertions.Add(() => AssertHeader(header, value, response));
@@ -186,6 +192,52 @@ namespace NSuperTest
             assertions.Add(() => RunCallback(callback));
             return this;
         }
+
+        // send info
+
+        public ITestBuilder Send(object body)
+        {
+            var json = JsonConvert.SerializeObject(body);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            return this;
+        }
+
+        public ITestBuilder Send(MultipartFormDataContent content)
+        {
+            request.Content = content;
+            return this;
+        }
+
+        public ITestBuilder Set(string header, string value)
+        {
+            request.Headers.Add(header, value);
+            return this;
+        }
+
+        // Bearer Tokens
+
+        public ITestBuilder SetBearerToken(string token)
+        {
+            request.Headers.Add("Authorization", string.Format("Bearer {0}", token));
+            return this;
+        }
+
+        public ITestBuilder SetBearerToken(Func<string> generator)
+        {
+            var token = generator();
+            request.Headers.Add("Authorization", string.Format("Bearer {0}", token));
+            return this;
+        }
+
+        public ITestBuilder SetBearerToken(Func<Task<string>> generatorTask)
+        {
+            var token = generatorTask().Result;
+            request.Headers.Add("Authorization", string.Format("Bearer {0}", token));
+            return this;
+        }
+
+        // Ends
 
         public async Task End<T>(Action<HttpResponseMessage, T> callback)
         {
@@ -208,6 +260,8 @@ namespace NSuperTest
                 assertion();
             }
         }
+
+        // Private concrete asserters
 
         private void AssertCode(int expected, HttpResponseMessage message)
         {
@@ -304,46 +358,5 @@ namespace NSuperTest
                 throw ex.InnerException;
             }
         }
-
-        public ITestBuilder Send(object body)
-        {
-            var json = JsonConvert.SerializeObject(body);
-            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            return this;
-        }
-
-        public ITestBuilder Send(MultipartFormDataContent content)
-        {
-            request.Content = content;
-            return this;
-        }
-
-        public ITestBuilder Set(string header, string value)
-        {
-            request.Headers.Add(header, value);
-            return this;
-        }
-
-        public ITestBuilder SetBearerToken(string token)
-        {
-            request.Headers.Add("Authorization", string.Format("Bearer {0}", token));
-            return this;
-        }
-
-        public ITestBuilder SetBearerToken(Func<string> generator)
-        {
-            var token = generator();
-            request.Headers.Add("Authorization", string.Format("Bearer {0}", token));
-            return this;
-        }
-
-        public ITestBuilder SetBearerToken(Func<Task<string>> generatorTask)
-        {
-            var token = generatorTask().Result;
-            request.Headers.Add("Authorization", string.Format("Bearer {0}", token));
-            return this;
-        }
-
     }
 }
