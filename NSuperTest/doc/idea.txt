@@ -23,10 +23,35 @@ server
     .expect(200, {})
     .end();
 
+Server :
 
+    Server is an interface. There is in mem server and there is remote server;
+    IServer => Server Factory can create an IServer reliably -> check ports etc;
+        Server factory can use different strategies for running a server -> One per call with no collisions -> one static. 
+    IServer exposes a httpclient that can be used to make calls. It also provides a wrapper to calls on the client
 
+    Factory can take options -> Theres an options object. You can register options Like httpclientfactory
 
+Tests : 
 
+    async extensions on Server methods... no end method.
+    nice error object that wraps up ALL errors in the chain.
+    default validation exceptions, as part of error stack
+    beautiful error messages
+
+server
+    .Get('/usr/')
+    .SetCookie(k, v)
+    .SetHeader(k, v)
+    .SetQuery(k, v)
+    .SetBody(b)
+    .Expect(200)
+    .Error((e) => {
+
+    })
+    .Success((s) => {
+        cxx;l                         
+    })
 
 
 
