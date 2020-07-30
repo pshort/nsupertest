@@ -13,6 +13,6 @@ namespace NSuperTest
         /// </summary>
         /// <param name="message">A HttpRequestMessage object</param>
         /// <returns>The associated HttpResponseMessage</returns>
-        Task<HttpResponseMessage> MakeRequest(HttpRequestMessage message);
+        Task<HttpResponseMessage> AsyncMakeRequest(HttpRequestMessage message);
     }
 }

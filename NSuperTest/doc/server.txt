@@ -1,32 +1,56 @@
 
-either server class (in mem) or not
+Server factory is singleton
+When asked it returns a reference to a server.
+Proxies are transitive. InMem are a singleton that is started up on registration.
 
-    if server class (in mem) ->
-        get port from config or set random port
-        combine with address
-        try to start    IN MEM MODE
-            if fail
-                if port from config -> random port + retry
-    else
-        if url
-            set address -> PROXY MODE
-        else
-            if server class
-                get port from config or set random port
-                combine with address
-                start IN MEM MODE
-                    if fail
-                        ifport from config -> random port + retry
-            
+Proxy (Address, Name);
+Server (Port? , Class, Name, Builder?, Config?);
 
+can you create a singleton inside a new method...
 
+ServerFactory wakes up on startup (static constructor) and finds IServers in the current
+app domain. Runs RegisterServers on them.
 
+Client uses ServerFactory to get IClients to
 
+public class Servers : IServerRegistration
+{
+	public void RegisterServers(ServerRegistry s)
+	{
+		s.AddInMemoryServer<Startup>("Local")
+			.BuilderStuff();
 
+		s.AddHttpClientProxy("Http", new Uri("http://www.google.com"));
+	}
+}
 
+ServerFactory builds servers based on a name
+TestClient wraps calls to ServerFactory.
 
+var client = new TestClient("Local");
+client.Get("/").Expect(200);
 
+IServer s = new Server("Local");
+IServer s = new Server("Http");
 
+s
+  .Get("/something")
+  .Expect(200);
+
+ServerFactory should have a default Lazy Static instance,
+but it should also be newable and the instance replaceable
+for ULTIMATE CRAZYNESS
+
+The server factory has a few things -> Discovery -> to the registry -> to the builders
+
+The registry stores builders which build IServers and are an extension point
+
+The discovery section supplies the Registry with stuff. First call to build runs discovery
+
+ServerFactory.Instance.Build("") -> Trigger discovery by default
+new ServerFactory(IRegistry, IDiscovery);
+
+yes yes yes -> this is testable
 
 
 

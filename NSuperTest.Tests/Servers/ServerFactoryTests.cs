@@ -1,42 +1,21 @@
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
+using NSuperTest.Registration;
 using NSuperTest.Server;
-using NSuperTest.Server.Mock;
 using Xunit;
 
 namespace NSuperTest.Tests.Servers
 {
     public class ServerFactoryTests
     {
-        IServerFactory factory;
-
-        public ServerFactoryTests()
-        {
-            factory = new ServerFactory();
-        }
-
         [Fact]
-        public void ShouldNotCreateAnythingWithNoRegistration()
+        public void ShouldFailIfNoServersRegistered()
         {
-            Action act = () => factory.Build("test");
-            act.Should()
-                .Throw<ServerCreationException>()
-                .WithMessage("There is no registered server with name 'test'");
-        }
-
-        [Fact]
-        public void ShouldCreateServerWithRegisteredName()
-        {
-            var opts = new ServerOptions
-            {
-                Name = "TestServer",
-                Instantiation = InstantiationModel.Transitive,
-                ServerType = ServerType.ClientProxyServer
-            };
-
-            factory.RegisterStrategy(opts);
-            IServer server = factory.Build("TestServer");
-            server.Name.Should().Be(opts.Name);
+            var factory = new ServerFactory(new List<IRegisterServers> { });
+            Action a = () => factory.Build("Test");
+            a.Should().Throw<ServerNotRegisteredException>()
+                .WithMessage("There is no registered server with the name 'Test'. Please make sure you are registering a server with that name in an IRegisterServers implementaition.");
         }
     }
 }

@@ -253,7 +253,7 @@ namespace NSuperTest
 
         public async Task End()
         {
-            response = await client.MakeRequest(request);
+            response = await client.AsyncMakeRequest(request);
 
             foreach(var assertion in assertions)
             {

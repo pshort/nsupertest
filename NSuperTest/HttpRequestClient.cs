@@ -15,7 +15,7 @@ namespace NSuperTest
             client.BaseAddress = new Uri(baseUri);
         }
 
-        public Task<HttpResponseMessage> MakeRequest(HttpRequestMessage message)
+        public Task<HttpResponseMessage> AsyncMakeRequest(HttpRequestMessage message)
         {
             return client.SendAsync(message);
         }

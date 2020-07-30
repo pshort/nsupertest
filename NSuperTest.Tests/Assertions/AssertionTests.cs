@@ -32,7 +32,7 @@ namespace NSuperTest.Tests.Assertions
             user = new User { Name = "Peter", Age = 32, Id = 1 };
 
             clientMock = new Mock<IHttpRequestClient>();
-            clientMock.Setup(c => c.MakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
+            clientMock.Setup(c => c.AsyncMakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
 
             builder = TestBuilderFactory.Create("/test", clientMock.Object);
             builder.SetMethod(HttpMethod.Get);
@@ -231,7 +231,7 @@ namespace NSuperTest.Tests.Assertions
         public void ShouldAssertAnObjectBody()
         {
             message.Content = new StringContent(JsonConvert.SerializeObject(user));
-            clientMock.Setup(c => c.MakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
+            clientMock.Setup(c => c.AsyncMakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
 
             builder
                 .Expect(user)
@@ -242,7 +242,7 @@ namespace NSuperTest.Tests.Assertions
         public void ShouldThrowBadObjectBody()
         {
             message.Content = new StringContent(JsonConvert.SerializeObject(user));
-            clientMock.Setup(c => c.MakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
+            clientMock.Setup(c => c.AsyncMakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
 
             Func<Task> a = async () => await builder
                                 .Expect(new User { Name = "Tom", Age = 11, Id = 1 })
@@ -256,7 +256,7 @@ namespace NSuperTest.Tests.Assertions
         public void ShouldAssertAnObjectBodyAndCallback()
         {
             message.Content = new StringContent(JsonConvert.SerializeObject(user));
-            clientMock.Setup(c => c.MakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
+            clientMock.Setup(c => c.AsyncMakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
 
             builder
                 .Expect(user, m =>

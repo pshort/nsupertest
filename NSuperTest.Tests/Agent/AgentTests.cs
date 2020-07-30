@@ -20,7 +20,7 @@ namespace NSuperTest.Tests.Agent
         public AgentTests()
         {
             client = new Mock<IHttpRequestClient>();
-            client.Setup(c => c.MakeRequest(It.IsAny<HttpRequestMessage>()))
+            client.Setup(c => c.AsyncMakeRequest(It.IsAny<HttpRequestMessage>()))
                 .Callback<HttpRequestMessage>(r => message = r);
 
             builder = TestBuilderFactory.Create("/test", client.Object);
@@ -35,7 +35,7 @@ namespace NSuperTest.Tests.Agent
                 .End();
 
             client.Verify(
-                c => c.MakeRequest(It.Is<HttpRequestMessage>(m => 
+                c => c.AsyncMakeRequest(It.Is<HttpRequestMessage>(m => 
                     m.Method == HttpMethod.Get && m.RequestUri.OriginalString == "/test")), 
                 Times.Once());
         }
@@ -49,7 +49,7 @@ namespace NSuperTest.Tests.Agent
                 .End();
 
             client.Verify(
-                c => c.MakeRequest(It.Is<HttpRequestMessage>(m =>
+                c => c.AsyncMakeRequest(It.Is<HttpRequestMessage>(m =>
                     m.Method == HttpMethod.Post && m.RequestUri.OriginalString == "/test")),
                 Times.Once());
         }
@@ -63,7 +63,7 @@ namespace NSuperTest.Tests.Agent
                 .End();
 
             client.Verify(
-                c => c.MakeRequest(It.Is<HttpRequestMessage>(m =>
+                c => c.AsyncMakeRequest(It.Is<HttpRequestMessage>(m =>
                     m.Method == HttpMethod.Put && m.RequestUri.OriginalString == "/test")),
                 Times.Once());
         }
@@ -77,7 +77,7 @@ namespace NSuperTest.Tests.Agent
                 .End();
 
             client.Verify(
-                c => c.MakeRequest(It.Is<HttpRequestMessage>(m =>
+                c => c.AsyncMakeRequest(It.Is<HttpRequestMessage>(m =>
                     m.Method == HttpMethod.Delete && m.RequestUri.OriginalString == "/test")),
                 Times.Once());
         }
@@ -92,7 +92,7 @@ namespace NSuperTest.Tests.Agent
                 .End();
 
             client.Verify(
-                c => c.MakeRequest(It.Is<HttpRequestMessage>(m =>
+                c => c.AsyncMakeRequest(It.Is<HttpRequestMessage>(m =>
                     m.Headers.GetValues("TestHeader").Single() == "TestValue")),
                 Times.Once());
         }
@@ -107,7 +107,7 @@ namespace NSuperTest.Tests.Agent
                 .End();
 
             client.Verify(
-                c => c.MakeRequest(It.Is<HttpRequestMessage>(m =>
+                c => c.AsyncMakeRequest(It.Is<HttpRequestMessage>(m =>
                     m.Headers.GetValues("Authorization").Single() == "Bearer test")),
                 Times.Once());
         }
@@ -122,7 +122,7 @@ namespace NSuperTest.Tests.Agent
                 .End();
 
             client.Verify(
-                c => c.MakeRequest(It.Is<HttpRequestMessage>(m =>
+                c => c.AsyncMakeRequest(It.Is<HttpRequestMessage>(m =>
                 m.Headers.GetValues("Authorization").Single() == "Bearer hello")),
                 Times.Once());
         }
@@ -141,7 +141,7 @@ namespace NSuperTest.Tests.Agent
 
 
             client.Verify(
-                c => c.MakeRequest(It.Is<HttpRequestMessage>(m =>
+                c => c.AsyncMakeRequest(It.Is<HttpRequestMessage>(m =>
                 m.Headers.GetValues("Authorization").Single() == "Bearer hello")),
                 Times.Once());
         }
@@ -156,7 +156,7 @@ namespace NSuperTest.Tests.Agent
                 .End();
 
             client.Verify(
-                c => c.MakeRequest(It.Is<HttpRequestMessage>(m =>
+                c => c.AsyncMakeRequest(It.Is<HttpRequestMessage>(m =>
                         m.Content.ReadAsStringAsync().Result == "{\"Name\":\"Peter\",\"Age\":32}"
                         && m.Content.Headers.ContentType.MediaType == "application/json"
                     )), Times.Once());
@@ -176,7 +176,7 @@ namespace NSuperTest.Tests.Agent
                 .End();
 
             client.Verify(
-                c => c.MakeRequest(It.Is<HttpRequestMessage>(
+                c => c.AsyncMakeRequest(It.Is<HttpRequestMessage>(
                     m => m.Content.Headers.ContentType.MediaType == "multipart/form-data" &&
                     m.Content == content
                 )), Times.Once());

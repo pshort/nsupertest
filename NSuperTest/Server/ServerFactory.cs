@@ -1,30 +1,47 @@
+﻿using NSuperTest.Registration;
+using System;
 using System.Collections.Generic;
-using NSuperTest.Server.Mock;
+using System.Linq;
+using System.Text;
 
 namespace NSuperTest.Server
 {
-    public class ServerFactory : IServerFactory
+    public class ServerFactory
     {
-        private Dictionary<string, ServerOptions> _servers;
+        private static Lazy<ServerFactory> _instance = new Lazy<ServerFactory>(() => new ServerFactory());
+        public static ServerFactory Instance { get {  return _instance.Value; } }
+
+
+        private ServerRegistry registry;
 
         public ServerFactory()
         {
-            _servers = new Dictionary<string, ServerOptions>();
-        }
-        
-        public IServer Build(string name)
-        {
-            if(!_servers.ContainsKey(name))
-            {
-                throw new ServerCreationException($"There is no registered server with name '{name}'");
-            }
-            
-            return new MockServer(name);
+            var registrations = new RegistrationDiscoverer().FindRegistrations();
+            LoadRegistrations(registrations);
         }
 
-        public void RegisterStrategy(ServerOptions options)
+        public ServerFactory(IEnumerable<IRegisterServers> registrations)
         {
-            _servers.Add(options.Name, options);
+            LoadRegistrations(registrations);
+        }
+
+        private void LoadRegistrations(IEnumerable<IRegisterServers> registrations)
+        {
+            registry = new ServerRegistry();
+            foreach(var r in registrations)
+            {
+                r.Register(registry);
+            }
+        }
+
+        public IServer Build(string name)
+        {
+            if(!registry.Servers.ContainsKey(name))
+            {
+                throw new ServerNotRegisteredException($"There is no registered server with the name '{name}'. Please make sure you are registering a server with that name in an IRegisterServers implementaition.");
+            }
+
+            return registry.Servers[name].Build();
         }
     }
 }
