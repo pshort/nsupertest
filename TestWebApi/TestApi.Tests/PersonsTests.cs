@@ -1,5 +1,4 @@
 using FluentAssertions;
-using NSuperTest;
 using NSuperTest.Client;
 using System.Threading.Tasks;
 using TestApi.Models;

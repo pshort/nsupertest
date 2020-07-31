@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using NSuperTest.Client;
 using Xunit;
 
@@ -23,7 +24,12 @@ namespace TestApi.Tests
             await client
                 .Get("/values")
                 .Expect(200)
-                .End();
+                .End<IEnumerable<string>>((m, r) =>
+                {
+                    r.Count().Should().Be(2);
+                    r.ElementAt(0).Should().Be(value1);
+                    r.ElementAt(1).Should().Be(value2);
+                });
         }
     }
 }
