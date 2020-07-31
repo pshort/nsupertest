@@ -1,41 +1,43 @@
 using NSuperTest;
-using TestApi.Tests.Fixtures;
+using NSuperTest.Client;
 using Xunit;
 
 namespace TestApi.Tests
 {
-    public class PersonsTests //: IClassFixture<TestApiFixture>
+    public class PersonsTests
     {
-        Server<Startup> server;
-        // public PersonsTests(TestApiFixture fixture)
-        // {
-        //     //server = fixture.Server;
-        // }
+        TestClient client;
+        public PersonsTests()
+        {
+            client = new TestClient("TestServer");
+        }
 
         [Fact]
         public void ShouldGetBadRequest()
         {
-            // server
-            //     .Post("/persons")
-            //     .Send(new {
-            //         Age = 10,
-            //         Name = "Test"
-            //     })
-            //     .Expect(400)
-            //     .End();
+            client
+                .Post("/persons")
+                .Send(new
+                {
+                    Age = 10,
+                    Name = "Test"
+                })
+                .Expect(400)
+                .End();
         }
 
         [Fact]
         public void ShouldGiveModelValidationResults()
         {
-            // server
-            //     .Post("/persons")
-            //     .Send(new {
-            //         Age = 200,
-            //         Name = "t1000"
-            //     })
-            //     .Expect(200)
-            //     .End();
+            client
+                .Post("/persons")
+                .Send(new
+                {
+                    Age = 200,
+                    Name = "t1000"
+                })
+                .Expect(200)
+                .End();
         }
         
     }

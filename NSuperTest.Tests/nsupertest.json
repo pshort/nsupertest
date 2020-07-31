@@ -1,5 +1,0 @@
-{
-    "nsupertest": {
-        "appStartup": "NSuperTest.Tests"
-    }
-}

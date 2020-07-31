@@ -1,35 +1,29 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
-using NSuperTest;
-using TestApi.Tests.Fixtures;
+using System.Threading.Tasks;
+using NSuperTest.Client;
 using Xunit;
 
 namespace TestApi.Tests
 {
-    public class ValuesTests : IClassFixture<TestApiFixture>
+    public class ValuesTests
     {
-        Server<Startup> server;
+        TestClient client;
         const string value1 = "three";
         const string value2 = "four";
 
-        public ValuesTests(TestApiFixture fixture)
+        public ValuesTests()
         {
-            server = fixture.Server;
+            client = new TestClient("TestServer");
         }
 
         [Fact]
-        public void ShouldGiveValues()
+        public async Task ShouldGiveValues()
         {
-            server
+            await client
                 .Get("/values")
                 .Expect(200)
-                .End<IEnumerable<string>>((r, m) => {
-                    Assert.Equal(2, m.Count());
-                    Assert.Equal(value1, m.ElementAt(0));
-                    Assert.Equal(value2, m.ElementAt(1));
-                });
+                .End();
         }
     }
 }

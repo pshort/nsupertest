@@ -16,10 +16,4 @@
     <ProjectReference Include="..\NSuperTest\NSuperTest.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="nsupertest.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
