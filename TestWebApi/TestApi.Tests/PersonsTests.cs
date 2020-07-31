@@ -1,5 +1,8 @@
+using FluentAssertions;
 using NSuperTest;
 using NSuperTest.Client;
+using System.Threading.Tasks;
+using TestApi.Models;
 using Xunit;
 
 namespace TestApi.Tests
@@ -13,30 +16,35 @@ namespace TestApi.Tests
         }
 
         [Fact]
-        public void ShouldGetBadRequest()
+        public async Task ShouldGetBadRequest()
         {
-            client
+            await client
                 .Post("/persons")
                 .Send(new
                 {
                     Age = 10,
                     Name = "Test"
                 })
-                .Expect(400)
-                .End();
+                .Expect(200)
+                .End<CreatePersonResponse>((m, r) =>
+                {
+                    r.Age.Should().Be(10);
+                    r.Name.Should().Be("Test");
+                    r.Id.Should().NotBe(0);
+                });
         }
 
         [Fact]
-        public void ShouldGiveModelValidationResults()
+        public async Task ShouldGiveModelValidationResults()
         {
-            client
+            await client
                 .Post("/persons")
                 .Send(new
                 {
                     Age = 200,
                     Name = "t1000"
                 })
-                .Expect(200)
+                .Expect(400)
                 .End();
         }
         
