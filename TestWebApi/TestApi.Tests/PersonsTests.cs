@@ -1,5 +1,6 @@
 using FluentAssertions;
 using NSuperTest.Client;
+using NSuperTest.Assertions;
 using System.Threading.Tasks;
 using TestApi.Models;
 using Xunit;
@@ -18,18 +19,16 @@ namespace TestApi.Tests
         public async Task ShouldGetBadRequest()
         {
             await client
-                .Post("/persons")
-                .Send(new
-                {
+                .PostAsync("/persons", new {
                     Age = 10,
                     Name = "Test"
                 })
-                .Expect(200)
-                .End<CreatePersonResponse>((m, r) =>
+                .ExpectStatus(200)
+                .ExpectBody<CreatePersonResponse>(model =>
                 {
-                    r.Age.Should().Be(10);
-                    r.Name.Should().Be("Test");
-                    r.Id.Should().NotBe(0);
+                    model.Age.Should().Be(10);
+                    model.Name.Should().Be("Test");
+                    model.Id.Should().NotBe(0);
                 });
         }
 
@@ -37,14 +36,11 @@ namespace TestApi.Tests
         public async Task ShouldGiveModelValidationResults()
         {
             await client
-                .Post("/persons")
-                .Send(new
-                {
+                .PostAsync("/persons", new {
                     Age = 200,
                     Name = "t1000"
                 })
-                .Expect(400)
-                .End();
+                .ExpectStatus(400);
         }
         
     }

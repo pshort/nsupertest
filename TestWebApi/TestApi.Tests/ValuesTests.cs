@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NSuperTest.Client;
+using NSuperTest.Assertions;
 using Xunit;
 
 namespace TestApi.Tests
@@ -16,6 +17,20 @@ namespace TestApi.Tests
         public ValuesTests()
         {
             client = new TestClient("TestServer");
+        }
+
+        [Fact]
+        public async Task ShouldBeAsync()
+        {
+            await client
+                .GetAsync("/values")
+                .ExpectStatus(200)
+                .ExpectBody<IEnumerable<string>>(model =>
+                {
+                    model.Count().Should().Be(2);
+                    model.ElementAt(0).Should().Be(value1);
+                    model.ElementAt(1).Should().Be(value2);
+                });
         }
 
         [Fact]
