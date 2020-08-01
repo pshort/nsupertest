@@ -62,18 +62,20 @@ namespace NSuperTest.Assertions
             return this;
         }
 
-        public void GetResult()
+        public HttpResponseMessage GetResult()
         {
             if (_assertAwaiter != null)
             {
                 var result = Root.GetResult();
                 _assert(result);
                 _assertAwaiter.GetResult();
+                return result;
             }
             else
             {
                 var result = _awaiter.GetResult();
                 _assert(result);
+                return result;
             }
         }
     }

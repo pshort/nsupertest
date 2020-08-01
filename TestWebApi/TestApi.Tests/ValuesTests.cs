@@ -5,6 +5,7 @@ using FluentAssertions;
 using NSuperTest.Client;
 using NSuperTest.Assertions;
 using Xunit;
+using System.Net.Http;
 
 namespace TestApi.Tests
 {
@@ -20,30 +21,20 @@ namespace TestApi.Tests
         }
 
         [Fact]
-        public async Task ShouldBeAsync()
+        public async Task ShouldGiveValues()
         {
+            var c2 = new HttpClient();
+            c2.BaseAddress = new System.Uri("http://www.google.com");
+            await c2.GetAsync("/").ExpectStatus(200);
+
             await client
                 .GetAsync("/values")
                 .ExpectStatus(200)
-                .ExpectBody<IEnumerable<string>>(model =>
+                .ExpectBody<IEnumerable<string>>(body =>
                 {
-                    model.Count().Should().Be(2);
-                    model.ElementAt(0).Should().Be(value1);
-                    model.ElementAt(1).Should().Be(value2);
-                });
-        }
-
-        [Fact]
-        public async Task ShouldGiveValues()
-        {
-            await client
-                .Get("/values")
-                .Expect(200)
-                .End<IEnumerable<string>>((m, r) =>
-                {
-                    r.Count().Should().Be(2);
-                    r.ElementAt(0).Should().Be(value1);
-                    r.ElementAt(1).Should().Be(value2);
+                    body.Count().Should().Be(2);
+                    body.ElementAt(0).Should().Be(value1);
+                    body.ElementAt(1).Should().Be(value2);
                 });
         }
     }

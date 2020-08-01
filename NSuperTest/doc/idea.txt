@@ -53,7 +53,7 @@ server
         cxx;l                         
     })
 
-
+poly integration -> retry mechanism etc -> configured in registration
 
 
 
