@@ -4,6 +4,7 @@ using NSuperTest.Assertions;
 using System.Threading.Tasks;
 using TestApi.Models;
 using Xunit;
+using System.Net.Http;
 
 namespace TestApi.Tests
 {
@@ -16,19 +17,41 @@ namespace TestApi.Tests
         }
 
         [Fact]
-        public async Task ShouldGetBadRequest()
+        public async Task ShouldUseRequest()
         {
+            var request = new PostRequest("/persons", new { Age = 10, Name = "Test" });
+
             await client
-                .PostAsync("/persons", new {
-                    Age = 10,
-                    Name = "Test"
-                })
+                .MakeRequestAsync(request)
                 .ExpectStatus(200)
                 .ExpectBody<CreatePersonResponse>(model =>
                 {
                     model.Age.Should().Be(10);
                     model.Name.Should().Be("Test");
                     model.Id.Should().NotBe(0);
+                    model.Id.Should().Be(10);
+                });
+        }
+
+        [Fact]
+        public async Task ShouldGetBadRequest()
+        {
+            await client
+                .PostAsync("/persons", 
+                    body: new {
+                        Age = 10,
+                        Name = "Test"
+                    },
+                    headers: new Headers { { "nameOverride", "peter" } },
+                    query: new Query { { "setId", "9" } }
+                )
+                .ExpectStatus(200)
+                .ExpectBody<CreatePersonResponse>(model =>
+                {
+                    model.Age.Should().Be(10);
+                    model.Name.Should().Be("peter");
+                    model.Id.Should().NotBe(0);
+                    model.Id.Should().Be(9);
                 });
         }
 

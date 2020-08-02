@@ -1,4 +1,5 @@
 
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,16 +13,21 @@ namespace TestApi.Controllers
     {
 
         [HttpPost]
-        public IActionResult CreatePerson([FromBody]CreatePersonRequest request)
+        public IActionResult CreatePerson([FromBody]CreatePersonRequest request, int? setId = null)
         {
             if(!ModelState.IsValid) 
             {
                 return BadRequest(ModelState.ValidationState);
             }
 
+            if(Request.Headers.ContainsKey("nameOverride"))
+            {
+                request.Name = Request.Headers["nameOverride"].First();
+            }
+
             return Ok(new CreatePersonResponse 
             {
-                Id = 10,
+                Id = setId != null ? setId.Value : 10,
                 Name = request.Name,
                 Age = request.Age
             });
