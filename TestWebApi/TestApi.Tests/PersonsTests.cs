@@ -24,6 +24,7 @@ namespace TestApi.Tests
             await client
                 .MakeRequestAsync(request)
                 .ExpectStatus(200)
+                .ExpectHeader("Test", "test")
                 .ExpectBody<CreatePersonResponse>(model =>
                 {
                     model.Age.Should().Be(10);

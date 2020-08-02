@@ -25,6 +25,8 @@ namespace TestApi.Controllers
                 request.Name = Request.Headers["nameOverride"].First();
             }
 
+            Response.Headers.Add("Test", new Microsoft.Extensions.Primitives.StringValues("test"));
+
             return Ok(new CreatePersonResponse 
             {
                 Id = setId != null ? setId.Value : 10,
