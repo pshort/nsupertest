@@ -11,19 +11,23 @@ using Moq;
 using Newtonsoft.Json;
 using NSuperTest.Tests.Models;
 using Xunit;
+using NSuperTest.Assertions;
 
 namespace NSuperTest.Tests.Assertions
 {
     public class AssertionTests
     {
         HttpResponseMessage message;
-        ITestBuilder builder;
+        HttpRequestMessage request;
+        //ITestBuilder builder;
         Mock<IHttpRequestClient> clientMock;
+        IHttpRequestClient client;
 
         User user;
 
         public AssertionTests()
         {
+            request = new HttpRequestMessage();
             message = new HttpResponseMessage();
             message.StatusCode = HttpStatusCode.OK;
             message.Content = new StringContent("Hello World");
@@ -32,102 +36,103 @@ namespace NSuperTest.Tests.Assertions
             user = new User { Name = "Peter", Age = 32, Id = 1 };
 
             clientMock = new Mock<IHttpRequestClient>();
-            clientMock.Setup(c => c.AsyncMakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
+            clientMock.Setup(c => c.AsyncMakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(() => message);
 
-            builder = TestBuilderFactory.Create("/test", clientMock.Object);
-            builder.SetMethod(HttpMethod.Get);
+            client = clientMock.Object;
+            //builder = TestBuilderFactory.Create("/test", clientMock.Object);
+            //builder.SetMethod(HttpMethod.Get);
         }
 
         [Fact]
-        public void ShouldAssertStatusCodes()
+        public async Task ShouldAssertStatusCodes()
         {
-            builder
-                .Expect(200)
-                .End();
+            var req = new HttpRequestMessage();
+            await client.AsyncMakeRequest(req).ExpectStatus(200);
+
+            message.AssertStatusCode(200);
         }
 
         [Fact]
-        public void ShouldAssertEnumStatusCode()
+        public async Task ShouldAssertEnumStatusCode()
         {
             message.StatusCode = HttpStatusCode.PartialContent;
+            await client.AsyncMakeRequest(request).ExpectStatus(HttpStatusCode.PartialContent);
 
-            builder
-                .Expect(HttpStatusCode.PartialContent)
-                .End();
+            message.AssertStatusCode((int)HttpStatusCode.PartialContent);
         }
 
-        [Fact]
-        public void ShouldAssertOk()
-        {
-            builder
-                .ExpectOk()
-                .End();
-        }
+        //[Fact]
+        //public void ShouldAssertOk()
+        //{
+        //    builder
+        //        .ExpectOk()
+        //        .End();
+        //}
 
-        [Fact]
-        public void ShouldAssertCreated()
-        {
-            message.StatusCode = HttpStatusCode.Created;
+        //[Fact]
+        //public void ShouldAssertCreated()
+        //{
+        //    message.StatusCode = HttpStatusCode.Created;
 
-            builder
-                .ExpectCreated()
-                .End();
-        }
+        //    builder
+        //        .ExpectCreated()
+        //        .End();
+        //}
 
-        [Fact]
-        public void ShouldAssertNotFound()
-        {
-            message.StatusCode = HttpStatusCode.NotFound;
+        //[Fact]
+        //public void ShouldAssertNotFound()
+        //{
+        //    message.StatusCode = HttpStatusCode.NotFound;
 
-            builder
-                .ExpectNotFound()
-                .End();
-        }
+        //    builder
+        //        .ExpectNotFound()
+        //        .End();
+        //}
 
-        [Fact]
-        public void ShouldAssertBadRequest()
-        {
-            message.StatusCode = HttpStatusCode.BadRequest;
+        //[Fact]
+        //public void ShouldAssertBadRequest()
+        //{
+        //    message.StatusCode = HttpStatusCode.BadRequest;
 
-            builder
-                .ExpectBadRequest()
-                .End();
-        }
+        //    builder
+        //        .ExpectBadRequest()
+        //        .End();
+        //}
 
-        [Fact]
-        public void ShouldAssertUnauthorized()
-        {
-            message.StatusCode = HttpStatusCode.Unauthorized;
+        //[Fact]
+        //public void ShouldAssertUnauthorized()
+        //{
+        //    message.StatusCode = HttpStatusCode.Unauthorized;
 
-            builder
-                .ExpectUnauthorized()
-                .End();
-        }
+        //    builder
+        //        .ExpectUnauthorized()
+        //        .End();
+        //}
 
-        [Fact]
-        public void ShouldAssertForbidden()
-        {
-            message.StatusCode = HttpStatusCode.Forbidden;
+        //[Fact]
+        //public void ShouldAssertForbidden()
+        //{
+        //    message.StatusCode = HttpStatusCode.Forbidden;
 
-            builder
-                .ExpectForbidden()
-                .End();
-        }
+        //    builder
+        //        .ExpectForbidden()
+        //        .End();
+        //}
 
-        [Fact]
-        public void ShouldAssertRedirect()
-        {
-            message.StatusCode = HttpStatusCode.Redirect;
+        //[Fact]
+        //public void ShouldAssertRedirect()
+        //{
+        //    message.StatusCode = HttpStatusCode.Redirect;
 
-            builder
-                .ExpectRedirect()
-                .End();
-        }
+        //    builder
+        //        .ExpectRedirect()
+        //        .End();
+        //}
 
         [Fact]
         public void ShouldThrowAssertStatusCodesUnauthorized()
         {
-            Func<Task> action = async () => await builder.Expect(401).End();
+            Func<Task> action = async () => await client.AsyncMakeRequest(request).ExpectStatus(401);
             action.Should().Throw<Exception>()
                 .WithMessage("Expected status code Unauthorized (401) but got Ok (200)");
         }
@@ -135,34 +140,35 @@ namespace NSuperTest.Tests.Assertions
         [Fact]
         public void ShouldThrowAssertStatusCodesForbidden()
         {
-            Func<Task> action = async () => await builder.Expect(403).End();
+            Func<Task> action = async () => await client.AsyncMakeRequest(request).ExpectStatus(403);
             action.Should().Throw<Exception>()
                 .WithMessage("Expected status code Forbidden (403) but got Ok (200)");
         }
 
         [Fact]
-        public void ShouldAssertStatusAndCallback()
+        public async Task ShouldAssertStatusAndCallback()
         {
-            builder
-                .Expect(200, m =>
+            await client.AsyncMakeRequest(request)
+                .ExpectStatus(200)
+                .ExpectResponse(resp =>
                 {
-                    m.StatusCode.Should()
-                        .BeEquivalentTo<HttpStatusCode>(HttpStatusCode.OK);
+                    resp.StatusCode.Should().BeEquivalentTo<HttpStatusCode>(HttpStatusCode.OK);
                 });
         }
 
         [Fact]
-        public void ShouldAssertBody()
+        public async Task ShouldAssertBody()
         {
-            builder
-                .Expect("Hello World")
-                .End();
+            await client.AsyncMakeRequest(request)
+                .ExpectStatus(200)
+                .ExpectBody("Hello World");
         }
 
         [Fact]
-        public void ShouldThrowBadBody()
+        public async Task ShouldThrowBadBody()
         {
-            Func<Task> a = async () => await builder.Expect("Goodbye World").End();
+            Func<Task> a = async () => await client.AsyncMakeRequest(request)
+                .ExpectBody("Goodbye World");
 
             a.Should()
                 .Throw<Exception>()
@@ -170,27 +176,27 @@ namespace NSuperTest.Tests.Assertions
         }
 
         [Fact]
-        public void ShouldAssertBodyAndCallback()
+        public async Task ShouldAssertBodyAndCallback()
         {
-            builder
-                .Expect("Hello World", m =>
+            await client.AsyncMakeRequest(request)
+                .ExpectBody("Hello World")
+                .ExpectResponse(resp =>
                 {
-                    m.Content.ReadAsStringAsync().Result.Should().StartWith("H");
+                    resp.Content.ReadAsStringAsync().Result.Should().StartWith("H");
                 });
         }
 
         [Fact]
-        public void ShouldAssertHeaders()
+        public async Task ShouldAssertHeaders()
         {
-            builder
-                .Expect("TestHeader", "Test")
-                .End();
+            await client.AsyncMakeRequest(request)
+                .ExpectHeader("TestHeader", "Test");
         }
 
         [Fact]
         public void ShouldThrowBadHeaderName()
         {
-            Func<Task> a = async () => await builder.Expect("Content", "100").End();
+            Func<Task> a = async () => await client.AsyncMakeRequest(request).ExpectHeader("Content", "100");
             a.Should()
                 .Throw<Exception>().WithMessage("Header 'Content' not found on response message");
         }
@@ -198,44 +204,43 @@ namespace NSuperTest.Tests.Assertions
         [Fact]
         public void ShouldThrowBadHeaderValue()
         {
-            Func<Task> a = async () => await builder.Expect("TestHeader", "100").End();
+            Func<Task> a = async () => await client.AsyncMakeRequest(request).ExpectHeader("TestHeader", "100");
             a.Should()
                 .Throw<Exception>().WithMessage("Header 'TestHeader' not found with value '100' on response message");
         }
 
         [Fact]
-        public void ShouldAssertHeaderWithCallback()
+        public async Task ShouldAssertHeaderWithCallback()
         {
-            builder
-                .Expect("TestHeader", "Test", m =>
+            await client.AsyncMakeRequest(request)
+                .ExpectHeader("TestHeader", "Test")
+                .ExpectResponse(resp =>
                 {
-                    m.Headers.GetValues("TestHeader").First().Should().BeSameAs("Test");
-                    m.Headers.GetValues("TestHeader").Should().HaveCount(1);
+                    resp.Headers.GetValues("TestHeader").First().Should().BeSameAs("Test");
+                    resp.Headers.GetValues("TestHeader").Should().HaveCount(1);
                 });
         }
 
         [Fact]
-        public void ShouldAssertCallback()
+        public async Task ShouldAssertCallback()
         {
-            builder
-                .Expect(m =>
+            await client.AsyncMakeRequest(request)
+                .ExpectResponse(resp =>
                 {
-                    m.Content.ReadAsStringAsync().Result.Should().Contain("Hello World");
-                    m.StatusCode.Should()
+                    resp.Content.ReadAsStringAsync().Result.Should().Contain("Hello World");
+                    resp.StatusCode.Should()
                         .BeEquivalentTo<HttpStatusCode>(HttpStatusCode.OK);
-                })
-                .End();
+                });
         }
 
         [Fact]
-        public void ShouldAssertAnObjectBody()
+        public async Task ShouldAssertAnObjectBody()
         {
             message.Content = new StringContent(JsonConvert.SerializeObject(user));
             clientMock.Setup(c => c.AsyncMakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
 
-            builder
-                .Expect(user)
-                .End();
+            await client.AsyncMakeRequest(request)
+                .ExpectBody(user, false);
         }
 
         [Fact]
@@ -244,24 +249,24 @@ namespace NSuperTest.Tests.Assertions
             message.Content = new StringContent(JsonConvert.SerializeObject(user));
             clientMock.Setup(c => c.AsyncMakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
 
-            Func<Task> a = async () => await builder
-                                .Expect(new User { Name = "Tom", Age = 11, Id = 1 })
-                                .End();
+            Func<Task> a = async () => await client.AsyncMakeRequest(request)
+                                .ExpectBody(new User { Name = "Tom", Age = 11, Id = 1 });
 
             a.Should()
                 .Throw<Exception>();
         }
 
         [Fact]
-        public void ShouldAssertAnObjectBodyAndCallback()
+        public async Task ShouldAssertAnObjectBodyAndCallback()
         {
             message.Content = new StringContent(JsonConvert.SerializeObject(user));
             clientMock.Setup(c => c.AsyncMakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
 
-            builder
-                .Expect(user, m =>
+            await client.AsyncMakeRequest(request)
+                .ExpectBody(user, false)
+                .ExpectResponse(resp =>
                 {
-                    m.StatusCode.Should()
+                    resp.StatusCode.Should()
                         .BeEquivalentTo<HttpStatusCode>(HttpStatusCode.OK);
                 });
         }

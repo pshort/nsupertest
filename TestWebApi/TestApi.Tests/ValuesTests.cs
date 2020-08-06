@@ -27,7 +27,7 @@ namespace TestApi.Tests
             c2.BaseAddress = new System.Uri("http://www.google.com");
             await c2.GetAsync("/").ExpectStatus(200);
 
-            await client
+            var message = await client
                 .GetAsync("/values")
                 .ExpectStatus(200)
                 .ExpectBody<IEnumerable<string>>(body =>
