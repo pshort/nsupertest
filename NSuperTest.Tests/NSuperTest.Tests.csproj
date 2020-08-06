@@ -16,8 +16,4 @@
     <ProjectReference Include="..\NSuperTest\NSuperTest.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Client\" />
-  </ItemGroup>
-
 </Project>

@@ -17,11 +17,13 @@ namespace NSuperTest.Client
     {
         private IHttpRequestClient _client;
         private IServer _server;
+        private RequestBuilder _requestBuilder;
 
         public TestClient(string serverName)
         {
             _server = ServerFactory.Instance.Build(serverName);
             _client = _server.GetClient();
+            _requestBuilder = new RequestBuilder();
         }
 
         public async Task<HttpResponseMessage> GetAsync(
@@ -85,51 +87,8 @@ namespace NSuperTest.Client
             Query query = null
         )
         {
-            if(query != null && query.Count != 0)
-            {
-                var sb = new StringBuilder(url);
-                if(url.Contains("?"))
-                {
-                    foreach(var q in query)
-                    {
-                        sb.Append($"&{q.Key}={q.Value}");
-                    }
-                }
-                else
-                {
-                    var f = query.First();
-                    sb.Append($"?{f.Key}={f.Value}");
-                    foreach(var q in query.Skip(1))
-                    {
-                        sb.Append($"&{q.Key}={q.Value}");
-                    }
-                }
-                url = sb.ToString();
-            }
-
-            var uri = new Uri(url, UriKind.Relative);
-            var req = new HttpRequestMessage(method, uri);
-
-            if(body != null && IsBodiedRequest(method))
-            {
-                var bodySerialized = JsonConvert.SerializeObject(body);
-                req.Content = new StringContent(bodySerialized, Encoding.UTF8, "application/json");
-            }
-
-            if(headers != null && headers.Count != 0)
-            {
-                foreach(var header in headers)
-                {
-                    req.Headers.Add(header.Key, header.Value);
-                }
-            }
-
-            return await _client.AsyncMakeRequest(req);
-        }
-
-        private bool IsBodiedRequest(HttpMethod method)
-        {
-            return method == HttpMethod.Post || method == HttpMethod.Put || method.Method == "PATCH";
+            var request = _requestBuilder.Build(url, method, body, headers, query);
+            return await _client.AsyncMakeRequest(request);
         }
     }
 }
