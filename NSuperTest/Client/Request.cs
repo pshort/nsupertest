@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 
-namespace NSuperTest.Client
+namespace NSuperTest
 {
+    public class Headers : Dictionary<string, string> { }
+    public class Query : Dictionary<string, string> { }
+
     public class GetRequest : Request
     {
         public GetRequest(string url)

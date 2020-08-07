@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using NSuperTest.Client;
-using NSuperTest.Assertions;
+using NSuperTest;
 using Xunit;
 using System.Net.Http;
 

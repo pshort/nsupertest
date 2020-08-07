@@ -5,8 +5,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using ResponseAction = System.Action<System.Net.Http.HttpResponseMessage>;
+using NSuperTest.Assertions;
 
-namespace NSuperTest.Assertions
+namespace NSuperTest
 {
     public static class GenAwaiterExtensions
     {

@@ -1,6 +1,5 @@
 using FluentAssertions;
-using NSuperTest.Client;
-using NSuperTest.Assertions;
+using NSuperTest;
 using System.Threading.Tasks;
 using TestApi.Models;
 using Xunit;
@@ -66,6 +65,5 @@ namespace TestApi.Tests
                 })
                 .ExpectStatus(400);
         }
-        
     }
 }

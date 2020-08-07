@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NSuperTest.Server;
+using NSuperTest.Client;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,11 +9,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NSuperTest.Client
+namespace NSuperTest
 {
-    public class Headers : Dictionary<string, string> { }
-    public class Query : Dictionary<string, string> { }
-
     public class TestClient
     {
         private IHttpRequestClient _client;
@@ -88,6 +86,11 @@ namespace NSuperTest.Client
         )
         {
             var request = _requestBuilder.Build(url, method, body, headers, query);
+            return await _client.AsyncMakeRequest(request);
+        }
+
+        public async Task<HttpResponseMessage> MakeRequestAsync(HttpRequestMessage request)
+        {
             return await _client.AsyncMakeRequest(request);
         }
     }
