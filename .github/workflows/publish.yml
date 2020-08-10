@@ -12,13 +12,24 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  test:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Set env
         run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF#refs/*/}
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.101
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
       - name: Test
-        run: |
-          echo $RELEASE_VERSION
-          echo ${{ env.RELEASE_VERSION }}
+        run: dotnet test --no-restore --verbosity normal
+      - name: Pack
+        run: dotnet pack -c Release ./NSuperTest/NSuperTest.csproj -p:PackageVersion=$RELEASE_VERSION -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      - name: Publish
+        run: dotnet nuget push ./NSuperTest/bin/Release/NSuperTest.$RELEASE_VERSION.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_KEY }}
