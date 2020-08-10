@@ -8,7 +8,6 @@ namespace NSuperTest.Server
     public interface IServer
     {
         string Address { get; }
-        bool UseCamelCase { get; }
 
         IHttpRequestClient GetClient();
     }

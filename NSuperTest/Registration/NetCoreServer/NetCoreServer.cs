@@ -14,8 +14,6 @@ namespace NSuperTest.Registration.NetCoreServer
 
         public string Address { get; }
 
-        public bool UseCamelCase { get; }
-
         public NetCoreServer(IWebHost host)
         {
             _host = host;
