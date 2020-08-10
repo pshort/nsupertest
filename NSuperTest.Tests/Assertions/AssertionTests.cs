@@ -61,6 +61,8 @@ namespace NSuperTest.Tests.Assertions
             message.AssertStatusCode((int)HttpStatusCode.PartialContent);
         }
 
+        // TODO : Do we want these back...
+
         //[Fact]
         //public void ShouldAssertOk()
         //{
@@ -165,7 +167,7 @@ namespace NSuperTest.Tests.Assertions
         }
 
         [Fact]
-        public async Task ShouldThrowBadBody()
+        public void ShouldThrowBadBody()
         {
             Func<Task> a = async () => await client.AsyncMakeRequest(request)
                 .ExpectBody("Goodbye World");
