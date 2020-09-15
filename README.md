@@ -103,6 +103,21 @@ Post allows you to post a body to the server
       .Expect(201)
       .End();
 ```
+### Patch
+Patch allows you to update data on the server
+
+```C#
+    var product = new {
+      Price = 50
+    };
+    
+    server
+      .Patch("/products")
+      .Send(product)
+      .Expect(200)
+      .End();
+```
+
 ### Put
 Put allows you to send a body to the server
 
