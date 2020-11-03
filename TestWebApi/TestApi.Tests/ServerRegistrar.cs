@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using NSuperTest.Registration;
 using NSuperTest.Registration.NetCoreServer;
+using NSuperTest.Registration.ProxyServer;
 
 namespace TestApi.Tests
 {
@@ -10,6 +12,8 @@ namespace TestApi.Tests
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json");
             reg.RegisterNetCoreServer<Startup>("TestServer", config);
+
+            reg.RegisterProxyServer("Test2", "https://www.google.com");
         }
     }
 }
