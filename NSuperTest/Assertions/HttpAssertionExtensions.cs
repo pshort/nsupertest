@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NSuperTest.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 
 namespace NSuperTest.Assertions
 {
@@ -71,17 +70,41 @@ namespace NSuperTest.Assertions
             throw new Exception(error);
         }
 
-        public static void Run<T>(this HttpResponseMessage message, Action<T> callback)
+        public static void AssertBadRequest(this HttpResponseMessage message, Action<ErrorList> callback)
         {
-            T body;
+            message.AssertStatusCode(400);
+            var body = DeserializeBody<BadRequestResponse>(message.Content.ReadAsStringAsync().Result);
+
             try
             {
-                body = JsonConvert.DeserializeObject<T>(message.Content.ReadAsStringAsync().Result);
+                if (callback != null)
+                    callback(body.Errors);
+            }
+            catch (AggregateException ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+        private static T DeserializeBody<T>(string body)
+        {
+            T bodyObject;
+
+            try
+            {
+                bodyObject = JsonConvert.DeserializeObject<T>(body);
             }
             catch
             {
                 throw new Exception(string.Format("Failed to deserialize body to type {0}", typeof(T).FullName));
             }
+
+            return bodyObject;
+        }
+
+        public static void Run<T>(this HttpResponseMessage message, Action<T> callback)
+        {
+            var body = DeserializeBody<T>(message.Content.ReadAsStringAsync().Result);
 
             try
             {
