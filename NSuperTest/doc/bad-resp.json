@@ -1,0 +1,11 @@
+{
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "traceId": "0HM432S4M1PF9:00000001",
+    "errors": {
+        "Age": [
+            "The field Age must be between 0 and 100."
+        ]
+    }
+}

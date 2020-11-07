@@ -63,7 +63,10 @@ namespace TestApi.Tests
                     Age = 200,
                     Name = "t1000"
                 })
-                .ExpectStatus(400);
+                .ExpectBadRequest(errors => {
+                    errors.Count.Should().Be(1);
+                    errors["Age"].Should().BeEquivalentTo(new [] { "The field Age must be between 0 and 100." });
+                });
         }
     }
 }
