@@ -87,6 +87,7 @@ Once you have a TestClient in your test its quite simple to use it to make http 
         .GetAsync("/values")
         .ExpectStatus(200);
 ```
+<<<<<<< HEAD
 
 This test performs a GET request against the values resource in the api and performs a status assertion, expecting a http status response code of 200.
 
