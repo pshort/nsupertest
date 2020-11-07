@@ -39,8 +39,6 @@ namespace NSuperTest.Tests.Assertions
             clientMock.Setup(c => c.AsyncMakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(() => message);
 
             client = clientMock.Object;
-            //builder = TestBuilderFactory.Create("/test", clientMock.Object);
-            //builder.SetMethod(HttpMethod.Get);
         }
 
         [Fact]
