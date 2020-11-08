@@ -5,6 +5,7 @@ using TestApi.Models;
 using Xunit;
 using System.Net.Http;
 using Newtonsoft.Json.Schema;
+using System.IO;
 
 namespace TestApi.Tests
 {
@@ -71,6 +72,25 @@ namespace TestApi.Tests
                 .ExpectStatus(200)
                 .ExpectSchema<CreatePersonResponse>();
         }
+
+        [Fact]
+        public async Task ShouldValidateResponseSchemaString()
+        {
+            var schema = await File.ReadAllTextAsync("./responseSchema.json");
+            
+            await client
+                .PostAsync("/persons", 
+                    body: new {
+                        Age = 10,
+                        Name = "Test"
+                    },
+                    headers: new Headers { { "nameOverride", "peter" } },
+                    query: new Query { { "setId", "9" } }
+                )
+                .ExpectStatus(200)
+                .ExpectSchema(schema);
+        }
+
 
         [Fact]
         public async Task ShouldGiveModelValidationResults()
