@@ -23,6 +23,18 @@ namespace NSuperTest
             var runCallback = new Func<Action<T>, ResponseAction>(act => new ResponseAction(m => m.Run(act)));
             return new HttpAssertionAwaiter(task, runCallback(assert));
         }
+
+        public static HttpAssertionAwaiter ExpectSchema<T>(this HttpAssertionAwaiter awaiter, bool useCamelCase = true)
+        {
+            var run = new Func<Action<T>, ResponseAction>(act => new ResponseAction(m => m.AssertResponseSchema<T>(useCamelCase)));
+            return new HttpAssertionAwaiter(awaiter, run(t => { return; }));
+        }
+
+        public static HttpAssertionAwaiter ExpectSchema<T>(this Task<HttpResponseMessage> task, bool useCamelCase = true)
+        {
+            var run = new Func<Action<T>, ResponseAction>(act => new ResponseAction(m => m.AssertResponseSchema<T>(useCamelCase)));
+            return new HttpAssertionAwaiter(task, run(t => { return; }));
+        }
     }
     
     public static class AwaiterExtensions

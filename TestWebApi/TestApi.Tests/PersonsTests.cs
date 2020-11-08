@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TestApi.Models;
 using Xunit;
 using System.Net.Http;
+using Newtonsoft.Json.Schema;
 
 namespace TestApi.Tests
 {
@@ -53,6 +54,22 @@ namespace TestApi.Tests
                     model.Id.Should().NotBe(0);
                     model.Id.Should().Be(9);
                 });
+        }
+
+        [Fact]
+        public async Task ShouldValidateResponseSchema()
+        {
+            await client
+                .PostAsync("/persons", 
+                    body: new {
+                        Age = 10,
+                        Name = "Test"
+                    },
+                    headers: new Headers { { "nameOverride", "peter" } },
+                    query: new Query { { "setId", "9" } }
+                )
+                .ExpectStatus(200)
+                .ExpectSchema<CreatePersonResponse>();
         }
 
         [Fact]
