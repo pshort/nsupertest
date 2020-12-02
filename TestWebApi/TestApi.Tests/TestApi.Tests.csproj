@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <None Include="appsettings.json" CopyToOutputDirectory="Always" />
+    <None Include="responseSchema.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>

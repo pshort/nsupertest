@@ -23,6 +23,18 @@ namespace NSuperTest
             var runCallback = new Func<Action<T>, ResponseAction>(act => new ResponseAction(m => m.Run(act)));
             return new HttpAssertionAwaiter(task, runCallback(assert));
         }
+
+        public static HttpAssertionAwaiter ExpectSchema<T>(this HttpAssertionAwaiter awaiter, bool useCamelCase = true)
+        {
+            var run = new Func<Action<T>, ResponseAction>(act => new ResponseAction(m => m.AssertResponseSchema<T>(useCamelCase)));
+            return new HttpAssertionAwaiter(awaiter, run(t => { return; }));
+        }
+
+        public static HttpAssertionAwaiter ExpectSchema<T>(this Task<HttpResponseMessage> task, bool useCamelCase = true)
+        {
+            var run = new Func<Action<T>, ResponseAction>(act => new ResponseAction(m => m.AssertResponseSchema<T>(useCamelCase)));
+            return new HttpAssertionAwaiter(task, run(t => { return; }));
+        }
     }
     
     public static class AwaiterExtensions
@@ -34,6 +46,8 @@ namespace NSuperTest
         private static Func<string, string, ResponseAction> assertHeader = (name, value) => new ResponseAction(m => m.AssertHeader(name, value));
 
         private static Func<BadRequestAction, ResponseAction> assertBadRequest = act => new ResponseAction(m => m.AssertBadRequest(act));
+
+        private static Func<string, ResponseAction> assertSchema = schema =>  new ResponseAction(async m => await m.AssertResponseSchema(schema));
 
         private static Func<string, ResponseAction> assertBodyString = body => 
             new ResponseAction(m => m.AssertBody(body));
@@ -56,6 +70,9 @@ namespace NSuperTest
         public static HttpAssertionAwaiter ExpectStatus(this Task<HttpResponseMessage> task, HttpStatusCode status) => 
             new HttpAssertionAwaiter(task, assertCode((int)status));
 
+
+        public static HttpAssertionAwaiter ExpectBadRequest(this HttpAssertionAwaiter awaiter, BadRequestAction assert) =>
+            new HttpAssertionAwaiter(awaiter, assertBadRequest(assert));
         public static HttpAssertionAwaiter ExpectBadRequest(this Task<HttpResponseMessage> task, BadRequestAction assert) =>
             new HttpAssertionAwaiter(task, assertBadRequest(assert));
         
@@ -76,5 +93,10 @@ namespace NSuperTest
             new HttpAssertionAwaiter(awaiter, assertBodyObject(body, useCamelCase));
         public static HttpAssertionAwaiter ExpectBody(this Task<HttpResponseMessage> task, object body, bool useCamelCase = true) => 
             new HttpAssertionAwaiter(task, assertBodyObject(body, useCamelCase));
+
+        public static HttpAssertionAwaiter ExpectSchema(this HttpAssertionAwaiter awaiter, string schema) =>
+            new HttpAssertionAwaiter(awaiter, assertSchema(schema));
+        public static HttpAssertionAwaiter ExpectSchema(this Task<HttpResponseMessage> task, string schema) =>
+            new HttpAssertionAwaiter(task, assertSchema(schema));
     }
 }

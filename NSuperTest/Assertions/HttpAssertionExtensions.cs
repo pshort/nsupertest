@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NJsonSchema;
 using NSuperTest.Models;
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace NSuperTest.Assertions
 {
@@ -83,6 +85,47 @@ namespace NSuperTest.Assertions
             catch (AggregateException ex)
             {
                 throw ex.InnerException;
+            }
+        }
+
+        public static void AssertResponseSchema<T>(this HttpResponseMessage message, bool useCamelCase = true)
+        {
+            NJsonSchema.Generation.JsonSchemaGeneratorSettings settings;
+            
+            if(useCamelCase)
+            {
+                settings = new NJsonSchema.Generation.JsonSchemaGeneratorSettings {
+                    SerializerSettings = new JsonSerializerSettings { 
+                        ContractResolver = new DefaultContractResolver {
+                            NamingStrategy = new CamelCaseNamingStrategy()
+                        }
+                    }
+                };
+            }
+            else
+            {
+                settings = new NJsonSchema.Generation.JsonSchemaGeneratorSettings();
+            }
+
+            var schema = JsonSchema.FromType<T>(settings);
+
+            var errors = schema.Validate(message.Content.ReadAsStringAsync().Result);
+
+            if(errors.Count > 0)
+            {
+                throw new SchemaValidationException(errors.Select(e => $"{e.Path}: {e.Kind}").ToList());
+            }
+        }
+
+        public static async Task AssertResponseSchema(this HttpResponseMessage message, string schemaDefinition)
+        {
+            var schema = await JsonSchema.FromJsonAsync(schemaDefinition);
+            var body = await message.Content.ReadAsStringAsync();
+            var errors = schema.Validate(body);
+
+            if(errors.Count > 0)
+            {
+                throw new SchemaValidationException(errors.Select(e => $"{e.Path}: {e.Kind}").ToList());
             }
         }
 
