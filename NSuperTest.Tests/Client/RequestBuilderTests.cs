@@ -70,6 +70,20 @@ namespace NSuperTest.Tests.Client
         }
 
         [Fact]
+        public void ShouldSupportBearerTokens()
+        {
+            var headers = new Headers { { "Authorization", "Bearer 123456" } }; // amazing token
+            var req = builder.Build("/test", HttpMethod.Get, headers: headers);
+            req.Headers.Contains("Authorization").Should().Be(true);
+            var token = req.Headers.GetValues("Authorization");
+            token.Count().Should().Be(1);
+            token.First().Should().Be("Bearer 123456");
+
+            req.Headers.Authorization.Scheme.Should().Be("Bearer");
+            req.Headers.Authorization.Parameter.Should().Be("123456");
+        }
+
+        [Fact]
         public void ShouldSupportBodies()
         {
             var body = new { Name = "Tom", Age = 11 };
