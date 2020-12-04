@@ -182,3 +182,7 @@ Assert the existence of a header value pair:
 ```C#
 .ExpectHeader("TestHeader", "TestValue");
 ```
+
+## Attribution
+
+The JSON schema validation is provided by the awesome [NJsonSchema](https://github.com/RicoSuter/NJsonSchema) library.
