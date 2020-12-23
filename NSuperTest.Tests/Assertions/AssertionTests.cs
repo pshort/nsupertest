@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using NSuperTest.Tests.Models;
 using Xunit;
 using NSuperTest.Assertions;
+using NSuperTest.Models;
 
 namespace NSuperTest.Tests.Assertions
 {
@@ -241,6 +242,28 @@ namespace NSuperTest.Tests.Assertions
 
             await client.AsyncMakeRequest(request)
                 .ExpectBody(user, false);
+        }
+
+        [Fact]
+        public async Task ShouldAssertBadRequest()
+        {
+            var messageBody = new BadRequestResponse 
+            {
+                Errors = new ErrorList
+                {
+                    { "Age", new List<string> { "Test" } }
+                }
+            };
+
+            message.StatusCode = HttpStatusCode.BadRequest;
+            message.Content = new StringContent(JsonConvert.SerializeObject(messageBody));
+            clientMock.Setup(c => c.AsyncMakeRequest(It.IsAny<HttpRequestMessage>())).ReturnsAsync(message);
+
+            await client.AsyncMakeRequest(request)
+                .ExpectBadRequest(err => {
+                    err.Count().Should().Be(1);
+                    err["Age"].Should().BeEquivalentTo(new string[] { "Test" });
+                });
         }
 
         [Fact]
