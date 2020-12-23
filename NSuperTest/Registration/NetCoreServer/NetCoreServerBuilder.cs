@@ -15,20 +15,29 @@ namespace NSuperTest.Registration.NetCoreServer
         private static IWebHost _host = null;
         private static IWebHostBuilder _builder = null;
         private const string _httpUrl = "http://[::1]:0";
-        private const string _httpsUrl = "https://[::1]:0";
 
         public NetCoreServerBuilder()
         {
-            _builder = new WebHostBuilder()
-                .UseKestrel()
-                .UseUrls(new string[] { _httpUrl })
-                .UseStartup<T>();
+            _builder = AddDefaultHost(new WebHostBuilder());
         }
 
         public void WithConfig(IConfigurationBuilder configBuilder)
         {
             var config = configBuilder.Build();
             _builder.UseConfiguration(config);
+        }
+
+        public void WithBuilder(IWebHostBuilder builder)
+        {
+            _builder = AddDefaultHost(builder);
+        }
+
+        private IWebHostBuilder AddDefaultHost(IWebHostBuilder builder)
+        {
+            return builder
+                .UseKestrel()
+                .UseUrls(new string[] { _httpUrl })
+                .UseStartup<T>();
         }
 
         public IServer Build()

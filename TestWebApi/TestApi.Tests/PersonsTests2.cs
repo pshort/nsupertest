@@ -9,12 +9,12 @@ using System.IO;
 
 namespace TestApi.Tests
 {
-    public class PersonsTests
+    public class PersonsTests2
     {
         TestClient client;
-        public PersonsTests()
+        public PersonsTests2()
         {
-            client = new TestClient(ServerRegistrar.TestServer);
+            client = new TestClient(ServerRegistrar.TestServer2);
         }
 
         [Fact]
