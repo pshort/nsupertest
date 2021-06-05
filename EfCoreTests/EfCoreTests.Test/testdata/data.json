@@ -1,0 +1,14 @@
+{
+    "Students": [
+        { "FirstMidName": "Carson", "LastName": "Alexander", "EnrollmentDate": "2019-09-01" },
+        { "FirstMidName": "Peter", "LastName": "Short", "EnrollmentDate": "2018-09-01" }
+    ],
+    "Courses": [
+        { "CourseId": 1050, "Title": "Chemistry", "Credits": 3 },
+        { "CourseId": 4022, "Title": "Microeconomics", "Credits": 3 }
+    ],
+    "Enrollments": [
+        { "StudentId": 1, "CourseId": 1050, "Grade": "A" },
+        { "StudentId": 1, "CourseId": 4022, "Grade": "C" }
+    ]
+}

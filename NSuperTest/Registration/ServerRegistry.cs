@@ -15,10 +15,12 @@ namespace NSuperTest.Registration
 
         public void Register(string name, IServerBuilder builder)
         {
-            if(Servers.ContainsKey(name))
+            if (Servers.ContainsKey(name))
             {
-                throw new ServerRegistrationException($"The server '{name}' has already been registered with the server registry. Perhaps you are accidentally including it in more than one IRegisterServers implementation.");
+                throw new ServerRegistrationException(
+                    $"The server '{name}' has already been registered with the server registry. Perhaps you are accidentally including it in more than one IRegisterServers implementation.");
             }
+
             Servers.Add(name, builder);
         }
     }

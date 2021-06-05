@@ -10,5 +10,7 @@ namespace NSuperTest.Server
         string Address { get; }
 
         IHttpRequestClient GetClient();
+
+        IServiceProvider GetServices();
     }
 }

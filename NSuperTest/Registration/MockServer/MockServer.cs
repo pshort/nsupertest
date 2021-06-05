@@ -7,6 +7,7 @@ using System.Text;
 
 namespace NSuperTest.Registration.MockServer
 {
+    // This server is just used for tests
     public class MockServer : IServer
     {
         public string Address { get; }
@@ -22,6 +23,11 @@ namespace NSuperTest.Registration.MockServer
         public IHttpRequestClient GetClient()
         {
             return new MockClient();
+        }
+
+        public IServiceProvider GetServices()
+        {
+            return null;
         }
     }
 }

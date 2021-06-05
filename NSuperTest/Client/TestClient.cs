@@ -17,6 +17,13 @@ namespace NSuperTest
         private IServer _server;
         private RequestBuilder _requestBuilder;
 
+        public TestClient(IServer server)
+        {
+            _server = server;
+            _client = server.GetClient();
+            _requestBuilder = new RequestBuilder();
+        }
+
         public TestClient(string serverName)
         {
             _server = ServerFactory.Instance.Build(serverName);

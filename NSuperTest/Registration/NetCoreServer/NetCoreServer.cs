@@ -26,5 +26,10 @@ namespace NSuperTest.Registration.NetCoreServer
             var client = new HttpRequestClient(Address);
             return client;
         }
+
+        public IServiceProvider GetServices()
+        {
+            return _host.Services;
+        }
     }
 }

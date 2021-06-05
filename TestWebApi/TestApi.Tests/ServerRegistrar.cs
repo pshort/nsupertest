@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using NSuperTest.Registration;
 using NSuperTest.Registration.NetCoreServer;
-using NSuperTest.Registration.ProxyServer;
 
 namespace TestApi.Tests
 {
@@ -15,11 +14,14 @@ namespace TestApi.Tests
         public void Register(ServerRegistry reg)
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json");
-            reg.RegisterNetCoreServer<Startup>(TestServer, config);
+            reg.RegisterNetCoreServer<Startup>(TestServer)
+                .WithConfig(config);
 
-            reg.RegisterNetCoreServer<Startup>(TestServer2, new WebHostBuilder().UseConfiguration(config.Build()));
+            var builder = new WebHostBuilder().UseConfiguration(config.Build());
+            reg.RegisterNetCoreServer<Startup>(TestServer2)
+                .WithBuilder(builder);
 
-            reg.RegisterProxyServer("Test2", "https://www.google.com");
+            //reg.RegisterProxyServer("Test2", "https://www.google.com");
         }
     }
 }

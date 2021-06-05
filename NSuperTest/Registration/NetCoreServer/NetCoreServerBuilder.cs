@@ -4,6 +4,7 @@ using NSuperTest.Server;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NSuperTest.Registration.NetCoreServer
 {
@@ -25,6 +26,11 @@ namespace NSuperTest.Registration.NetCoreServer
         {
             var config = configBuilder.Build();
             _builder.UseConfiguration(config);
+        }
+
+        public void WithServices(Action<IServiceCollection> services)
+        {
+            _builder.ConfigureServices(services);
         }
 
         public void WithBuilder(IWebHostBuilder builder)

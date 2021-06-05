@@ -11,7 +11,6 @@ namespace NSuperTest.Server
         private static Lazy<ServerFactory> _instance = new Lazy<ServerFactory>(() => new ServerFactory());
         public static ServerFactory Instance { get {  return _instance.Value; } }
 
-
         private ServerRegistry registry;
 
         public ServerFactory()
@@ -32,6 +31,11 @@ namespace NSuperTest.Server
             {
                 r.Register(registry);
             }
+        }
+
+        public static IServer GetServer(string name)
+        {
+            return Instance.Build(name);
         }
 
         public IServer Build(string name)

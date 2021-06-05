@@ -1,0 +1,36 @@
+
+# What is important
+
+In memory isolated system (integration) testing. How to make this easy. Low barrier to entry. Really easy to get started and control.
+Make it reaaaaallly reaaaalaaaaaaaaallllyyyyy easy.
+
+## How do I do this
+
+2 ways.
+
+1. Server setup -> make it really easy to host the server in memory. Make it realllllly easy to mock out other systems.
+	a. Systems of ef core db
+		inject and clear context
+		easy context load from a file (no need to write out all the classes)
+		easy editing of data
+	b. Systems of http other services
+		easy simple http mock setup -> override baseurl on clients inside service
+	c. Systems of rabbit mq?
+		no clue, but needs api to publish messages to the queue to see the service work
+	d. ??? -> make an extension set that allows you to set this up. To plug into the server as a set of extensions.
+		plugs into service as a set of features
+		overrides specific implementations in the server so that its easy to start using them
+
+2. Testing -> The fluent API. Make the api really easy to write tests. Make it really easy to verify code. Make verification good.
+	a. Also keep the proxy part alive for those who want it. Using httpclient as the breakpoint.
+
+
+Why have the registry -> to manage the lifetime of the server object -> you dont want to continually rebuild and re-launch it for every test
+Why have the testclient -> to wrap the server connection (abstract)
+	maybe we dont need this -> maybe we need to call for a server. play with the server and then call .GetClient() on it for a client.
+	clients are cheap.
+
+We should stop supporting Proxy server as a server. NSuperTest can be used on top of httpclient if you want.
+
+
+

@@ -16,4 +16,8 @@
     <PackageReference Include="njsonschema" Version="10.2.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ServerBuilder" />
+  </ItemGroup>
+
 </Project>
